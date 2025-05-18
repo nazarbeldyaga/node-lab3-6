@@ -1,0 +1,10 @@
+<h2><%= book ? 'Edit Book' : 'Create Book' %></h2>
+<form action="<%= book ? '/admin/edit/' + book.id : '/admin/create' %>" method="POST">
+    <label>Title:</label><br>
+    <input type="text" name="title" value="<%= book ? book.title : '' %>" required><br>
+    <label>Author:</label><br>
+    <input type="text" name="author" value="<%= book ? book.author : '' %>" required><br>
+    <label>Keywords (comma-separated):</label><br>
+    <input type="text" name="keywords" value="<%= book ? book.keywords.join(', ') : '' %>" required><br>
+    <button type="submit"><%= book ? 'Update' : 'Create' %></button>
+</form>
