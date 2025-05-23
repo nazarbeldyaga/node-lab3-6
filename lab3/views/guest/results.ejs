@@ -1,4 +1,4 @@
-<h2>Search Results for "<%= searchTerm %>" (by <%= searchType %>)</h2>
+<!-- <h2>Search Results for "<%= searchTerm %>" (by <%= searchType %>)</h2>
 <% if (books.length > 0) { %>
     <table border="1">
         <tr>
@@ -17,4 +17,14 @@
 <% } else { %>
     <p>No results found.</p>
 <% } %>
+<a href="/guest">Back to Search</a> -->
+
+<h2>Результат "<%= searchTerm %>"</h2>
+<% if (day != undefined) { %>
+    <h1><%= day.date %></h1>
+    <h2><%= day.is_weekend %></h2>
+<% } else { %>
+    <span>No Data</span>
+<% } %>
+
 <a href="/guest">Back to Search</a>
