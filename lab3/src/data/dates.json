@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "date": "2025-05-20",
+    "is_weekend": false
+  },
+  {
+    "id": 2,
+    "date": "2025-05-21",
+    "is_weekend": false
+  },
+  {
+    "id": 3,
+    "date": "2025-05-22",
+    "is_weekend": false
+  },
+  {
+    "id": 4,
+    "date": "2025-05-23",
+    "is_weekend": false
+  },
+  {
+    "id": 5,
+    "date": "2025-05-24",
+    "is_weekend": true
+  },
+  {
+    "id": 6,
+    "date": "2025-05-25",
+    "is_weekend": true
+  },
+  {
+    "id": 7,
+    "date": "2025-05-26",
+    "is_weekend": false
+  },
+  {
+    "id": 8,
+    "date": "2025-05-27",
+    "is_weekend": false
+  },
+  {
+    "id": 9,
+    "date": "2025-05-28",
+    "is_weekend": false
+  },
+  {
+    "id": 10,
+    "date": "2025-05-29",
+    "is_weekend": false
+  },
+  {
+    "id": 11,
+    "date": "2025-05-30",
+    "is_weekend": false
+  },
+  {
+    "id": 12,
+    "date": "2025-05-31",
+    "is_weekend": true
+  },
+  {
+    "id": 13,
+    "date": "2025-06-01",
+    "is_weekend": true
+  },
+  {
+    "id": 14,
+    "date": "2025-06-02",
+    "is_weekend": false
+  },
+  {
+    "id": 15,
+    "date": "2025-06-03",
+    "is_weekend": false
+  },
+  {
+    "id": 16,
+    "date": "2025-06-04",
+    "is_weekend": false
+  },
+  {
+    "id": 17,
+    "date": "2025-06-05",
+    "is_weekend": false
+  },
+  {
+    "id": 18,
+    "date": "2025-06-06",
+    "is_weekend": false
+  },
+  {
+    "id": 19,
+    "date": "2025-06-07",
+    "is_weekend": true
+  },
+  {
+    "id": 20,
+    "date": "2025-06-08",
+    "is_weekend": true
+  },
+  {
+    "id": 21,
+    "date": "2025-06-09",
+    "is_weekend": false
+  },
+  {
+    "id": 22,
+    "date": "2025-06-10",
+    "is_weekend": false
+  },
+  {
+    "id": 23,
+    "date": "2025-06-11",
+    "is_weekend": false
+  },
+  {
+    "id": 24,
+    "date": "2025-06-12",
+    "is_weekend": false
+  },
+  {
+    "id": 25,
+    "date": "2025-06-13",
+    "is_weekend": false
+  },
+  {
+    "id": 26,
+    "date": "2025-06-14",
+    "is_weekend": true
+  },
+  {
+    "id": 27,
+    "date": "2025-06-15",
+    "is_weekend": true
+  },
+  {
+    "id": 28,
+    "date": "2025-06-16",
+    "is_weekend": false
+  },
+  {
+    "id": 29,
+    "date": "2025-06-17",
+    "is_weekend": false
+  },
+  {
+    "id": 30,
+    "date": "2025-06-18",
+    "is_weekend": false
+  }
+]
