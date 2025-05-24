@@ -1,8 +1,24 @@
-<header>
-    <h1>Прогноз погоди</h1>
-    <nav>
-        <a href="/">Головна</a> |
-        <a href="/guest">Календар</a> |
-        <a href="/admin">Адмін</a>
+<header class="header">
+    <div class="logo">
+        <h1>Прогноз погоди</h1>
+    </div>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="/">Головна</a></li>
+            <li><a href="/guest">Календар</a></li>
+            <% if (locals.user && locals.user.role === 'admin') { %>
+                <li><a href="/admin">Адмін панель</a></li>
+            <% } %>
+        </ul>
     </nav>
+
+    <div class="user-info">
+        <% if (locals.user) { %>
+            <span>Вітаємо, <%= user.username %>!</span>
+            <a href="/auth/logout" class="btn-logout">Вийти</a>
+        <% } else { %>
+            <a href="/auth/login" class="btn-login">Увійти</a>
+        <% } %>
+    </div>
 </header>
