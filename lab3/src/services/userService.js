@@ -1,64 +1,41 @@
-const fs = require('fs').promises;
-const path = require('path');
 const bcrypt = require('bcrypt');
+const userRepository = require('../repositories/userRepository');
 
-const usersFilePath = path.join(__dirname, '../data/users.json');
-
-// Отримати всіх користувачів
-const getAllUsers = async () => {
-    try {
-        const data = await fs.readFile(usersFilePath, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error('Помилка при читанні файлу користувачів:', error);
-        return [];
-    }
-};
-
-// Знайти користувача за ім'ям користувача
 const findUserByUsername = async (username) => {
-    const users = await getAllUsers();
+    const users = await userRepository.getUsers();
     return users.find(user => user.username === username);
 };
 
-// Перевірити пароль користувача
-const verifyPassword = async (plainPassword, hashedPassword) => {
-    return await bcrypt.compare(plainPassword, hashedPassword);
+const verifyPassword = async (password, hashedPassword) => {
+    return await bcrypt.compare(password, hashedPassword);
 };
 
-// Створити нового користувача
 const createUser = async (userData) => {
-    const users = await getAllUsers();
+    const users = await userRepository.getUsers();
 
-    // Перевірка, чи користувач з таким ім'ям вже існує
     if (users.some(user => user.username === userData.username)) {
         throw new Error('Користувач з таким ім\'ям вже існує');
     }
 
-    // Хешування пароля
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
-    // Створення нового користувача
     const newUser = {
-        id: users.length > 0 ? Math.max(...users.map(user => user.id)) + 1 : 1,
+        id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
         username: userData.username,
         password: hashedPassword,
-        role: userData.role || 'guest'
+        role: userData.role || 'guest',
+        createdAt: new Date().toISOString()
     };
 
-    // Додавання користувача до масиву
     users.push(newUser);
+    await userRepository.saveUsers(users);
 
-    // Збереження оновленого масиву у файл
-    await fs.writeFile(usersFilePath, JSON.stringify(users, null, 2), 'utf8');
-
-    // Повертаємо користувача без пароля
     const { password, ...userWithoutPassword } = newUser;
     return userWithoutPassword;
 };
 
 module.exports = {
-    getAllUsers,
     findUserByUsername,
     verifyPassword,
     createUser
