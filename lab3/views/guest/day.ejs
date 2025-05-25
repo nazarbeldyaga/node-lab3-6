@@ -1,9 +1,37 @@
-<h2>Результат "<%= searchTerm %>"</h2>
-<% if (day != undefined) { %>
-    <h1><%= day.date %></h1>
-    <h2><%= day.is_weekend %></h2>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Результати пошуку</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<h2>Результат для: <%= searchTerm %></h2>
+
+<% if (date) { %>
+    <div class="result-card">
+        <h1><%= date %></h1>
+        <h2><%= isWeekend ? 'Вихідний день' : 'Робочий день' %></h2>
+
+        <% if (forecast.length > 0) { %>
+            <ul>
+                <% forecast.forEach(f => { %>
+                    <li>
+                        <strong><%= f.hour %>:00</strong> — <%= f.temperature %>°C, <%= f.cloud_type %>
+                        (<%= f.wind_direction %> вітру, <%= f.wind_speed %> м/с)
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>Немає прогнозу для цієї дати.</p>
+        <% } %>
+    </div>
 <% } else { %>
-    <span>No Data</span>
+    <p>Дані не знайдено.</p>
 <% } %>
 
-<a href="/guest">Back to Search</a>
+<a href="/guest">← Назад до пошуку</a>
+
+</body>
+</html>
