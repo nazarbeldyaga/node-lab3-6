@@ -26,6 +26,10 @@ router.get('/', async (req, res) => {
     });
 });
 
+router.post('/createForecast', dayController.createForecast);
+
 router.post('/updateForecast', dayController.updateForecast);
+
+router.post('/deleteForecast', dayController.deleteForecast);
 
 module.exports = router;

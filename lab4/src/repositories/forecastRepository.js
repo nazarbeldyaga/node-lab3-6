@@ -24,6 +24,16 @@ const getForecastsByLocationAndDate = (db, locationId, dateId) =>
         ORDER BY f.hour
     `, [locationId, dateId]);
 
+const getForecastsByLocationAndDateAndHour = (db, locationId, dateId, hour) =>
+    db.any(`
+        SELECT 
+            f.id, f.location_id, f.date_id, f.hour, f.temperature,
+            f.cloud_type::text, f.wind_direction::text, f.wind_speed,
+            f.precipitation, f.is_rain, f.is_thunderstorm, f.is_snow, f.is_hail
+        FROM forecasts f
+        WHERE f.location_id = $1 AND f.date_id = $2 AND f.hour = $3
+    `, [locationId, dateId, hour]);
+
 const getLocationById = (db, id) =>
     db.oneOrNone('SELECT * FROM locations WHERE id = $1', [id]);
 
@@ -34,12 +44,12 @@ const getDateByDateString = (db, dateStr) =>
 const createForecast = (db, forecast) =>
     db.one(`
         INSERT INTO forecasts (
-            id, location_id, date_id, hour, temperature, wind_direction, wind_speed,
+            location_id, date_id, hour, temperature, wind_direction, wind_speed,
             precipitation, cloud_type, is_rain, is_thunderstorm, is_snow, is_hail
         ) VALUES (
-            $[id], $[location_id], $[date_id], $[hour], $[temperature], $[wind_direction], $[wind_speed],
+            $[location_id], $[date_id], $[hour], $[temperature], $[wind_direction], $[wind_speed],
             $[precipitation], $[cloud_type], $[is_rain], $[is_thunderstorm], $[is_snow], $[is_hail]
-        ) RETURNING id
+        ) RETURNING *
     `, forecast);
 
 const updateForecast = (db, id, updates) =>
@@ -55,7 +65,7 @@ const deleteForecast = (db, id) =>
     db.result('DELETE FROM forecasts WHERE id = $1', [id]);
 
 // Update для адміністратора
-const updateAllForecast = (db, id, updates) =>
+const updateForecastAdmin = (db, updates) =>
     db.result(`
         UPDATE forecasts SET
             temperature = COALESCE($[temperature], temperature),
@@ -68,17 +78,24 @@ const updateAllForecast = (db, id, updates) =>
             is_snow = COALESCE($[is_snow], is_snow),
             is_hail = COALESCE($[is_hail], is_hail)
         WHERE location_id = $[location_id] AND date_id = $[date_id] AND hour = $[hour]
-    `, { id, ...updates });
+    `, { ...updates });
+
+// Delete для адміністратора
+const deleteForecastAdmin = (db, toDelete) => 
+    db.result(`
+        DELETE FROM forecasts WHERE location_id = $[location_id] AND date_id = $[date_id] AND hour = $[hour]
+    `, {...toDelete});
 
 module.exports = {
     getLocations,
     getDates,
     getForecasts,
     getForecastsByLocationAndDate,
+    getForecastsByLocationAndDateAndHour,
     getLocationById,
     getDateByDateString,
     createForecast,
     updateForecast,
-    updateAllForecast,
-    deleteForecast
+    updateForecastAdmin,
+    deleteForecastAdmin
 };

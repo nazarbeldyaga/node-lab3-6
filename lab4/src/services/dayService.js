@@ -24,15 +24,40 @@ const getForecastByDateAndLocation = async (locationId, dateStr) => {
 };
 
 // Створення прогнозу
-const createForecastTransaction = async (forecast) => {
+const createForecastTransaction = async (weatherData) => {
     return db.tx(async t => {
-        if (forecast.temperature > MAX_TEMPERATURE_CELSIUS) {
+        if (weatherData.temperature > MAX_TEMPERATURE_CELSIUS) {
             throw new Error('The temperature exceeds the permissible limit');
         }
 
+        const dates = await repo.getDates(t);
+        const dateObj = dates.find(d => d.date === weatherData.date);
+        const date_id = dateObj ? dateObj.id : null;
+        if (!date_id) throw new Error('Invalid date: не знайдено date_id');
+
+        const hour = parseInt(weatherData.time.split(':')[0], 10);
+
+        const newForecast = {
+            location_id: Number(weatherData.location_id),
+            date_id,
+            hour,
+            temperature: Number(weatherData.temperature),
+            wind_direction: weatherData.wind_direction,
+            wind_speed: Number(weatherData.wind_speed),
+            precipitation: Number(weatherData.precipitation),
+            cloud_type: weatherData.cloud_type,
+            is_rain: weatherData.is_rain === 'on',
+            is_thunderstorm: weatherData.is_thunderstorm === 'on',
+            is_snow: weatherData.is_snow === 'on',
+            is_hail: weatherData.is_hail === 'on',
+        };
+
+        const existingForecast = await repo.getForecastsByLocationAndDateAndHour(t, newForecast.location_id, newForecast.date_id, newForecast.hour);
+        if (existingForecast) throw new Error('Прогноз на вказані дату, місто та годину вже існує ❌');
+
         // Якщо все добре, то створити прогноз
-        const created = await repo.createForecast(t, forecast);
-        return created;
+        const created = await repo.createForecast(t, newForecast);
+        return {  success: true, updated: created };
     });
 };
 
@@ -50,7 +75,7 @@ const updateForecastTransaction = async (id, updates) => {
 };
 
 // Оновлення прогнозу для адміністратора
-const updateAllForecastTransaction = async (id, weatherData) => {
+const updateAllForecastTransaction = async (weatherData) => {
     return db.tx(async t => {
         const dates = await repo.getDates(t);
         const dateObj = dates.find(d => d.date === weatherData.date);
@@ -74,18 +99,30 @@ const updateAllForecastTransaction = async (id, weatherData) => {
             is_hail: weatherData.is_hail === 'on',
         };
 
-        const result = await repo.updateAllForecast(t, id, updates);
+        const result = await repo.updateForecastAdmin(t, updates);
         if (result.rowCount === 0) throw new Error('Прогноз не знайдено');
 
-        return { success: true, id, updated: updates };
+        return { success: true, updated: updates };
     });
 };
 
 
 // Видалення прогнозу
-const deleteForecastTransaction = async (id) => {
+const deleteForecastTransaction = async (weatherData) => {
     return db.tx(async t => {
-        const result = await repo.deleteForecast(t, id);
+        const dates = await repo.getDates(t);
+        const dateObj = dates.find(d => d.date === weatherData.date);
+        const date_id = dateObj ? dateObj.id : null;
+        if (!date_id) throw new Error('Invalid date: не знайдено date_id');
+
+        const hour = parseInt(weatherData.time.split(':')[0], 10);
+
+        const toDelete = {
+            location_id: Number(weatherData.location_id),
+            date_id,
+            hour
+        }
+        const result = await repo.deleteForecastAdmin(t, toDelete);
         if (result.rowCount === 0) throw new Error('Forecast not found');
         return true;
     });

@@ -5,14 +5,14 @@ DROP TABLE IF EXISTS forecasts CASCADE;
 
 -- Таблиця dates
 CREATE TABLE IF NOT EXISTS dates (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     date DATE NOT NULL,
     is_weekend BOOLEAN NOT NULL
 );
 
 -- Таблиця locations
 CREATE TABLE IF NOT EXISTS locations (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(24) NOT NULL
 );
 
@@ -23,7 +23,7 @@ CREATE TYPE enum_wind_direction AS ENUM ('Зх', 'Сх', 'Пн', 'Пд', 'ПнЗ
 
 -- Таблиця forecasts
 CREATE TABLE IF NOT EXISTS forecasts (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     location_id INT NOT NULL REFERENCES locations(id),
     date_id INT NOT NULL REFERENCES dates(id),
     hour INT NOT NULL,

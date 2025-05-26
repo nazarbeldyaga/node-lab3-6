@@ -1,12 +1,29 @@
 const dayService = require('../services/dayService');
 
+const createForecast = async (req, res) => {
+    try {
+        const newForecast = req.body;
+
+        const result = await dayService.createForecastTransaction(newForecast);
+        res.render('admin/result', {
+            title: "Результат",
+            message: "Прогноз успішно додано ✅",
+            result
+        });
+    } catch (error) {
+        console.error('Помилка при додаванні погоди:', error);
+        res.status(500).render('error', {
+            title: 'Помилка',
+            message: error.message || 'Не вдалося додати прогноз погоди'
+        });
+    }
+};
+
 const updateForecast = async (req, res) => {
     try {
-        const forecastId = parseInt(req.params.id);
         const updates = req.body;
 
-        const result = await dayService.updateAllForecastTransaction(forecastId, updates);
-        console.log(result)
+        const result = await dayService.updateAllForecastTransaction(updates);
         res.render('admin/result', {
             title: "Результат",
             message: "Прогноз успішно оновлено ✅",
@@ -17,6 +34,24 @@ const updateForecast = async (req, res) => {
         res.status(500).render('error', {
             title: 'Помилка',
             message: error.message || 'Не вдалося оновити прогноз погоди'
+        });
+    }
+};
+
+const deleteForecast = async (req, res) => {
+    const toDelete = req.body;
+    try {
+        const result = await dayService.deleteForecastTransaction(toDelete);
+        res.render('admin/result', {
+            title: "Результат",
+            message: "Прогноз успішно видалено ✅",
+            result
+        });
+    } catch (error) {
+        console.error('Помилка при видалити погоди:', error);
+        res.status(500).render('error', {
+            title: 'Помилка',
+            message: error.message || 'Не вдалося видалити прогноз погоди'
         });
     }
 };
@@ -53,6 +88,8 @@ const renderForecastPage = (res, data, date) => {
 };
 
 module.exports = { 
+    createForecast,
+    deleteForecast,
     updateForecast,
     searchByDay
 };

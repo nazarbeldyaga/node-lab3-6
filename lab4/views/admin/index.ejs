@@ -21,7 +21,7 @@
             </select>
 
             <label for="date">Оберіть дату:</label>
-            <input type="date" name="date" required min="<%= minDate %>" max="<%= maxDate %>">
+            <input type="date" name="date" min="<%= minDate %>" max="<%= maxDate %>" required>
 
             <label for="time">Оберіть час:</label>
             <select name="time" required>
@@ -38,7 +38,7 @@
 
         <div class="form-section">
             <label for="temperature">Температура (°C):</label>
-            <input type="number" name="temperature" step="1" min="-100" max="100" required>
+            <input type="number" name="temperature" step="1" min="-100" max="100" value="0" required>
 
             <label for="wind_direction">Напрям вітру:</label>
             <select name="wind_direction" required>
@@ -53,10 +53,10 @@
             </select>
 
             <label for="wind_speed">Швидкість вітру (м/с):</label>
-            <input type="number" name="wind_speed" step="1" min="0" max="120"  required>
+            <input type="number" name="wind_speed" step="1" min="0" max="120" value="0" required>
 
             <label for="precipitation">Кількість опадів (мм):</label>
-            <input type="number" name="precipitation" step="0.1" min="0" max="100" required>
+            <input type="number" name="precipitation" step="0.1" min="0" max="100" value="0" required>
 
             <label for="cloud_type">Тип хмарності:</label>
             <select name="cloud_type" required>
@@ -74,7 +74,10 @@
 
     <br>
 
+    <button type="submit" formaction="/admin/createForecast" formmethod="POST">Додати</button>
     <button type="submit">Змінити</button>
+    <button type="submit" formaction="/admin/deleteForecast" formmethod="POST"
+        onclick="return confirm('Ви впевнені, що хочете видалити прогноз?')">Видалити</button>
 </form>
 
 </body>
