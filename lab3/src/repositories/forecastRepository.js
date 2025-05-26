@@ -6,7 +6,7 @@ const locationsPath = path.join(__dirname, '../data/locations.json');
 const datesPath = path.join(__dirname, '../data/dates.json');
 const forecastsPath = path.join(__dirname, '../data/forecasts.json');
 
-// Асинхронні методи
+// Асинхронні методи з async/await
 const getLocations = async () => {
     const data = await fs.readFile(locationsPath, 'utf8');
     return JSON.parse(data);
@@ -38,11 +38,115 @@ const getForecastsSync = () => {
     return JSON.parse(data);
 };
 
+// Методи з використанням класичних Promises
+const getLocationsPromise = () => {
+    return new Promise((resolve, reject) => {
+        fsSync.readFile(locationsPath, 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            try {
+                const locations = JSON.parse(data);
+                resolve(locations);
+            } catch (parseError) {
+                reject(parseError);
+            }
+        });
+    });
+};
+
+const getDatesPromise = () => {
+    return new Promise((resolve, reject) => {
+        fsSync.readFile(datesPath, 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            try {
+                const dates = JSON.parse(data);
+                resolve(dates);
+            } catch (parseError) {
+                reject(parseError);
+            }
+        });
+    });
+};
+
+const getForecastsPromise = () => {
+    return new Promise((resolve, reject) => {
+        fsSync.readFile(forecastsPath, 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            try {
+                const forecasts = JSON.parse(data);
+                resolve(forecasts);
+            } catch (parseError) {
+                reject(parseError);
+            }
+        });
+    });
+};
+
+// Методи з використанням callbacks
+const getLocationsCallback = (callback) => {
+    fsSync.readFile(locationsPath, 'utf8', (err, data) => {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+        try {
+            const locations = JSON.parse(data);
+            callback(null, locations);
+        } catch (parseError) {
+            callback(parseError, null);
+        }
+    });
+};
+
+const getDatesCallback = (callback) => {
+    fsSync.readFile(datesPath, 'utf8', (err, data) => {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+        try {
+            const dates = JSON.parse(data);
+            callback(null, dates);
+        } catch (parseError) {
+            callback(parseError, null);
+        }
+    });
+};
+
+const getForecastsCallback = (callback) => {
+    fsSync.readFile(forecastsPath, 'utf8', (err, data) => {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+        try {
+            const forecasts = JSON.parse(data);
+            callback(null, forecasts);
+        } catch (parseError) {
+            callback(parseError, null);
+        }
+    });
+};
+
 module.exports = {
     getLocations,
     getDates,
     getForecasts,
     getLocationsSync,
     getDatesSync,
-    getForecastsSync
+    getForecastsSync,
+    getLocationsPromise,
+    getDatesPromise,
+    getForecastsPromise,
+    getLocationsCallback,
+    getDatesCallback,
+    getForecastsCallback
 };

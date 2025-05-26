@@ -1,17 +1,27 @@
-<h2>Library Catalog</h2>
-<h3>Search</h3>
-<form action="/guest/search/author" method="GET">
-    <label>Search by Author:</label>
-    <input type="text" name="name">
-    <button type="submit">Search</button>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+</head>
+<body>
+
+<h2>Календар прогнозу погоди</h2>
+
+<form action="/guest/day" method="GET">
+    <label for="location_id">Оберіть локацію:</label>
+    <select name="location_id" required>
+        <% locations.forEach(loc => { %>
+            <option value="<%= loc.id %>"><%= loc.name %></option>
+        <% }) %>
+    </select>
+
+    <label for="date">Оберіть дату:</label>
+    <input type="date" name="date" required min="<%= minDate %>" max="<%= maxDate %>">
+
+    <button type="submit">Пошук</button>
 </form>
-<form action="/guest/search/title" method="GET">
-    <label>Search by Title:</label>
-    <input type="text" name="title">
-    <button type="submit">Search</button>
-</form>
-<form action="/guest/search/keyword" method="GET">
-    <label>Search by Keyword:</label>
-    <input type="text" name="keyword">
-    <button type="submit">Search</button>
-</form>
+
+</body>
+</html>

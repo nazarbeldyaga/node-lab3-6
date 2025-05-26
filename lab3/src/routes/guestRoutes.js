@@ -22,4 +22,9 @@ router.get('/', async (req, res) => {
 
 router.get('/day', dayController.searchByDay);
 
+//     searchByDay,
+//     searchByDayCallback,
+//     searchByDayPromise,
+//     searchByDaySync
+
 module.exports = router;
