@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Результати пошуку</title>
+        <link
+            rel="stylesheet"
+            href="/stylesheets/styles.css"
+        />
+    </head>
+    <body>
+        <% if (date) { %>
+            <div class="result-card">
+                <div class="result-card__header result-header">
+                    <span class="result-header__info"><%= locationName %> — <%= date %></span>
+                    <span class="result-header__weekend"><%= isWeekend ? 'Вихідний день' : 'Робочий день' %></>
+                </div>
+
+                <% if (forecast.length > 0) { %>
+                    <div class="forecast-list">
+                        <% forecast.forEach(f => { %>
+                            <span class="forecast-item-main">
+                                <strong><%= f.hour %>:00</strong> — <%= f.temperature %>°C, <%= f.cloud_type %>
+                                (<%= f.wind_direction %> вітру, <%= f.wind_speed %> м/с)
+                            </span>
+                            <% if (f.is_rain || f.is_thunderstorm || f.is_snow || f.is_hail) { %>
+                                <span class="forecast-item-secondary">
+                                    <strong>
+                                        <% if (f.is_rain) { %> Дощ. <% } %>
+                                        <% if (f.is_thunderstorm) { %> Гроза. <% } %>
+                                        <% if (f.is_snow) { %> Сніг. <% } %>
+                                        <% if (f.is_hail) { %> Град. <% } %>
+                                    </strong>
+                                    Опади: <%= f.precipitation %>
+                                </span>
+                            <% } %>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <p>Немає прогнозу для цієї дати.</p>
+                <% } %>
+            </div>
+        <% } else { %>
+            <p>Дані не знайдено.</p>
+        <% } %>
+
+        <div class="forecast__pagination">
+            <% if (prevDate) { %>
+                <a href="/calendar/day?location_id=<%= locationId %>&date=<%= prevDate %>">Попередня</a>
+            <% } %>
+            
+            <% if (prevDate && nextDate) { %>
+                <span> | </span>
+            <% } %>
+            
+            <% if (nextDate) { %>
+                <a href="/calendar/day?location_id=<%= locationId %>&date=<%= nextDate %>">Наступна</a>
+            <% } %>
+        </div>
+
+        <a href="/calendar" class="forecast__button-back">← Назад до пошуку</a>
+    </body>
+</html>

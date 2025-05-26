@@ -11,9 +11,15 @@ const getForecastByDateAndLocation = async (locationId, dateStr) => {
 
         const date = await repo.getDateByDateString(t, dateStr);
         if (!date) return { location, date: null, forecast: [] };
+        
+        nextDate = new Date(dateStr).getTime() + 1 * 24 * 60 * 60 * 1000;
+        nextDateData = await repo.getDateByDateString(t, new Date(nextDate).toISOString().split('T')[0])
+
+        prevDate = new Date(dateStr).getTime() - 1 * 24 * 60 * 60 * 1000;
+        prevDateData = await repo.getDateByDateString(t, new Date(prevDate).toISOString().split('T')[0])
 
         const forecast = await repo.getForecastsByLocationAndDate(t, locationId, date.id);
-        return { location, date, forecast };
+        return { location, date, forecast, nextDateData, prevDateData };
     });
 };
 

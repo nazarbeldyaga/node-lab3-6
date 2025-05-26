@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8" />
+        <title><%= title %></title>
+        <link
+            rel="stylesheet"
+            href="/stylesheets/styles.css"
+        />
+    </head>
+    <body>
+        <h2>Календар прогнозу погоди</h2>
+
+        <form
+            class="calendar__form"
+            action="/calendar/day"
+            method="GET"
+        >
+            <label class="form__label">
+                Оберіть локацію:
+                <select name="location_id" required>
+                    <% locations.forEach(loc => { %>
+                        <option value="<%= loc.id %>"><%= loc.name %></option>
+                    <% }) %>
+                </select>
+            </label>
+
+            <label class="form__label">
+                Оберіть дату:
+                <input
+                    type="date"
+                    name="date"
+                    required
+                    min="<%= minDate %>"
+                    max="<%= maxDate %>"
+                />
+            </label>
+
+            <button type="submit">Пошук</button>
+        </form>
+    </body>
+</html>

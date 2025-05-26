@@ -39,13 +39,16 @@ const searchByDay = async (req, res) => {
 
 // Рендер
 const renderForecastPage = (res, data, date) => {
-    res.render('guest/day', {
+    res.render('calendar/day', {
         title: 'Прогноз погоди',
         searchTerm: `${data.location?.name || 'Локація'} — ${date}`,
         locationName: data.location?.name || 'Невідомо',
+        locationId: data.location?.id || null,
         date: data.date?.date || null,
         isWeekend: data.date?.is_weekend,
-        forecast: data.forecast || []
+        forecast: data.forecast || [],
+        nextDate: data.nextDateData?.date || null,
+        prevDate: data.prevDateData?.date || null
     });
 };
 

@@ -8,7 +8,7 @@ router.get('/login', (req, res) => {
         if (req.session.user.role === 'admin') {
             return res.redirect('/admin');
         }
-        return res.redirect('/guest');
+        return res.redirect('/calendar');
     }
     
     res.render('auth/login', { 
@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
         if (user.role === 'admin') {
             return res.redirect('/admin');
         }
-        return res.redirect('/guest');
+        return res.redirect('/calendar');
     } catch (error) {
         console.error('Помилка при вході:', error);
         res.status(500).render('error', { 
@@ -74,7 +74,7 @@ router.post('/register', async (req, res) => {
         });
 
         req.session.user = newUser;
-        res.redirect('/guest');
+        res.redirect('/calendar');
     } catch (error) {
         console.error('Помилка при реєстрації:', error);
         res.render('auth/register', { 

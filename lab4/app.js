@@ -9,7 +9,7 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') }
 
 const indexRouter = require('./src/routes/index');
 const adminRouter = require('./src/routes/adminRoutes');
-const guestRouter = require('./src/routes/guestRoutes');
+const calendarRouter = require('./src/routes/calendarRoutes');
 const authRouter = require('./src/routes/authRoutes');
 const errorHandler = require('./src/middlewares/errorHandler');
 const config = require('./config/app.config');
@@ -46,7 +46,7 @@ app.use((req, res, next) => {
 
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
-app.use('/guest', guestRouter);
+app.use('/calendar', calendarRouter);
 app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
