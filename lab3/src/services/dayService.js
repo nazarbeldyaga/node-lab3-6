@@ -99,10 +99,16 @@ const getForecastByDateAndLocation = async (locationId, dateStr) => {
     const date = dates.find(d => d.date === dateStr);
 
     if (!date) return { location, date: null, forecast: [] };
+    
+    nextDate = new Date(dateStr).getTime() + 1 * 24 * 60 * 60 * 1000;
+    nextDateData = dates.find(d => d.date === new Date(nextDate).toISOString().split('T')[0]);
+
+    prevDate = new Date(dateStr).getTime() - 1 * 24 * 60 * 60 * 1000;
+    prevDateData = dates.find(d => d.date === new Date(prevDate).toISOString().split('T')[0]);
 
     const forecast = forecasts.filter(f => f.location_id === locationId && f.date_id === date.id);
 
-    return { location, date, forecast };
+    return { location, date, forecast, nextDateData, prevDateData };
 };
 
 // Метод з використанням синхронних функцій
@@ -115,10 +121,16 @@ const getForecastByDateAndLocationSync = (locationId, dateStr) => {
     const date = dates.find(d => d.date === dateStr);
 
     if (!date) return { location, date: null, forecast: [] };
+    
+    nextDate = new Date(dateStr).getTime() + 1 * 24 * 60 * 60 * 1000;
+    nextDateData = dates.find(d => d.date === new Date(nextDate).toISOString().split('T')[0]);
+
+    prevDate = new Date(dateStr).getTime() - 1 * 24 * 60 * 60 * 1000;
+    prevDateData = dates.find(d => d.date === new Date(prevDate).toISOString().split('T')[0]);
 
     const forecast = forecasts.filter(f => f.location_id === locationId && f.date_id === date.id);
 
-    return { location, date, forecast };
+    return { location, date, forecast, nextDateData, prevDateData };
 };
 
 // Метод з використанням класичних Promises
@@ -133,10 +145,16 @@ const getForecastByDateAndLocationPromise = (locationId, dateStr) => {
         const date = dates.find(d => d.date === dateStr);
 
         if (!date) return { location, date: null, forecast: [] };
+    
+        nextDate = new Date(dateStr).getTime() + 1 * 24 * 60 * 60 * 1000;
+        nextDateData = dates.find(d => d.date === new Date(nextDate).toISOString().split('T')[0]);
+
+        prevDate = new Date(dateStr).getTime() - 1 * 24 * 60 * 60 * 1000;
+        prevDateData = dates.find(d => d.date === new Date(prevDate).toISOString().split('T')[0]);
 
         const forecast = forecasts.filter(f => f.location_id === locationId && f.date_id === date.id);
 
-        return { location, date, forecast };
+        return { location, date, forecast, nextDateData, prevDateData };
     })
     .catch(error => {
         console.error('Помилка при отриманні прогнозу:', error);
@@ -175,10 +193,17 @@ const getForecastByDateAndLocationCallback = (locationId, dateStr, callback) => 
             dateData = dates.find(d => d.date === dateStr);
 
             if (!dateData) {
-                callback(null, { location: locationData, date: null, forecast: [] });
+                callback(null, { location: locationData, date: null, forecast: [], nextDateData: null, prevDateData: null });
                 return;
             }
 
+            nextDate = new Date(dateStr).getTime() + 1 * 24 * 60 * 60 * 1000;
+            nextDateData = dates.find(d => d.date === new Date(nextDate).toISOString().split('T')[0]);
+
+            prevDate = new Date(dateStr).getTime() - 1 * 24 * 60 * 60 * 1000;
+            prevDateData = dates.find(d => d.date === new Date(prevDate).toISOString().split('T')[0]);
+
+            // Отримуємо прогнози
             forecastRepository.getForecastsCallback((err, forecasts) => {
                 if (err || errorOccurred) {
                     if (!errorOccurred) {
@@ -193,7 +218,9 @@ const getForecastByDateAndLocationCallback = (locationId, dateStr, callback) => 
                 callback(null, { 
                     location: locationData, 
                     date: dateData, 
-                    forecast: forecastData 
+                    forecast: forecastData,
+                    nextDateData: nextDateData,
+                    prevDateData: prevDateData
                 });
             });
         });

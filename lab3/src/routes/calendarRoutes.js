@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     const minDate = dateStrings[0];
     const maxDate = dateStrings[dateStrings.length - 1];
 
-    res.render('guest/index', {
+    res.render('calendar/index', {
         title: 'Прогноз погоди - Календар',
         locations,
         minDate,

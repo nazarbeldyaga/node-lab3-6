@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="auth">
     <h1>Вхід в систему</h1>
 
     <% if (locals.error) { %>
@@ -7,23 +7,24 @@
         </div>
     <% } %>
 
-    <form action="/auth/login" method="POST">
-        <div class="form-group">
-            <label for="username">Логін:</label>
-            <input type="text" id="username" name="username" required autofocus>
-        </div>
+    <form class="auth__form" action="/auth/login" method="POST">
+        <label class="form__label">
+            Логін:
+            <input type="text" name="username" required autofocus>
+        </label>
 
-        <div class="form-group">
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
+        <label class="form__label">
+            Пароль:
+            <input type="password" name="password" required>
+        </label>
 
         <button type="submit" class="btn-login">Увійти</button>
     </form>
 
-    <div class="register-link">
-        <p>Немає облікового запису? <a href="/auth/register">Зареєструватися</a></p>
-    </div>
+    <span class="auth__swap-wrapper">
+        Немає облікового запису?
+        <a href="/auth/register" class="swap-wrapper__link">Зареєструватися</a>
+    </span>
 
     <div class="login-info">
         <p>Тестові облікові записи:</p>

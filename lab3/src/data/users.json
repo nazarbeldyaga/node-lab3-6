@@ -10,5 +10,11 @@
     "username": "admin",
     "password": "$2b$10$pi4bch2NHdMESMJnW1jRyu4D7oWUL0TAU4D9fRvmvT8hK1ZUw6jMO",
     "role": "admin"
+  },
+  {
+    "id": 3,
+    "username": "asd",
+    "password": "$2b$10$CSzq16Lgw5jDOp9Cog.dYuyLT/8uxj3BObtTeLCfvk53MP/9kCGhG",
+    "role": "guest"
   }
 ]
