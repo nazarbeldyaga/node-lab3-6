@@ -1,5 +1,26 @@
 const dayService = require('../services/dayService');
 
+const updateForecast = async (req, res) => {
+    try {
+        const forecastId = parseInt(req.params.id);
+        const updates = req.body;
+
+        const result = await dayService.updateAllForecastTransaction(forecastId, updates);
+        console.log(result)
+        res.render('admin/result', {
+            title: "Результат",
+            message: "Прогноз успішно оновлено ✅",
+            result
+        });
+    } catch (error) {
+        console.error('Помилка при оновленні погоди:', error);
+        res.status(500).render('error', {
+            title: 'Помилка',
+            message: error.message || 'Не вдалося оновити прогноз погоди'
+        });
+    }
+};
+
 const searchByDay = async (req, res) => {
     const { location_id, date } = req.query;
     const locationId = parseInt(location_id);
@@ -29,5 +50,6 @@ const renderForecastPage = (res, data, date) => {
 };
 
 module.exports = { 
+    updateForecast,
     searchByDay
 };

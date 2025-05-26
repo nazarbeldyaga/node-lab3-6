@@ -43,6 +43,39 @@ const updateForecastTransaction = async (id, updates) => {
     });
 };
 
+// Оновлення прогнозу для адміністратора
+const updateAllForecastTransaction = async (id, weatherData) => {
+    return db.tx(async t => {
+        const dates = await repo.getDates(t);
+        const dateObj = dates.find(d => d.date === weatherData.date);
+        const date_id = dateObj ? dateObj.id : null;
+        if (!date_id) throw new Error('Invalid date: не знайдено date_id');
+
+        const hour = parseInt(weatherData.time.split(':')[0], 10);
+
+        const updates = {
+            location_id: Number(weatherData.location_id),
+            date_id,
+            hour,
+            temperature: Number(weatherData.temperature),
+            wind_direction: weatherData.wind_direction,
+            wind_speed: Number(weatherData.wind_speed),
+            precipitation: Number(weatherData.precipitation),
+            cloud_type: weatherData.cloud_type,
+            is_rain: weatherData.is_rain === 'on',
+            is_thunderstorm: weatherData.is_thunderstorm === 'on',
+            is_snow: weatherData.is_snow === 'on',
+            is_hail: weatherData.is_hail === 'on',
+        };
+
+        const result = await repo.updateAllForecast(t, id, updates);
+        if (result.rowCount === 0) throw new Error('Прогноз не знайдено');
+
+        return { success: true, id, updated: updates };
+    });
+};
+
+
 // Видалення прогнозу
 const deleteForecastTransaction = async (id) => {
     return db.tx(async t => {
@@ -56,5 +89,6 @@ module.exports = {
     getForecastByDateAndLocation,
     createForecastTransaction,
     updateForecastTransaction,
+    updateAllForecastTransaction,
     deleteForecastTransaction
 };

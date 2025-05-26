@@ -1,0 +1,17 @@
+<br>
+<h2>Погода успішно оновлена! ✅</h2>
+<div style="margin-top: 20px;">
+  <h3>Оновлений прогноз:</h3>
+  <ul>
+    <li><strong>Година:</strong> <%= result.updated.hour %>:00</li>
+    <li><strong>Температура:</strong> <%= result.updated.temperature %>°C</li>
+    <li><strong>Напрям вітру:</strong> <%= result.updated.wind_direction %></li>
+    <li><strong>Швидкість вітру:</strong> <%= result.updated.wind_speed %> м/с</li>
+    <li><strong>Опади:</strong> <%= result.updated.precipitation %> мм</li>
+    <li><strong>Тип хмар:</strong> <%= result.updated.cloud_type %></li>
+    <li><strong>Дощ:</strong> <%= result.updated.is_rain ? 'Так' : 'Ні' %></li>
+    <li><strong>Гроза:</strong> <%= result.updated.is_thunderstorm ? 'Так' : 'Ні' %></li>
+    <li><strong>Сніг:</strong> <%= result.updated.is_snow ? 'Так' : 'Ні' %></li>
+    <li><strong>Град:</strong> <%= result.updated.is_hail ? 'Так' : 'Ні' %></li>
+  </ul>
+</div>

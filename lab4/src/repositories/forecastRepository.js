@@ -54,6 +54,22 @@ const updateForecast = (db, id, updates) =>
 const deleteForecast = (db, id) =>
     db.result('DELETE FROM forecasts WHERE id = $1', [id]);
 
+// Update для адміністратора
+const updateAllForecast = (db, id, updates) =>
+    db.result(`
+        UPDATE forecasts SET
+            temperature = COALESCE($[temperature], temperature),
+            wind_speed = COALESCE($[wind_speed], wind_speed),
+            precipitation = COALESCE($[precipitation], precipitation),
+            cloud_type = COALESCE($[cloud_type]::enum_cloud_type, cloud_type),
+            wind_direction = COALESCE($[wind_direction]::enum_wind_direction, wind_direction),
+            is_rain = COALESCE($[is_rain], is_rain),
+            is_thunderstorm = COALESCE($[is_thunderstorm], is_thunderstorm),
+            is_snow = COALESCE($[is_snow], is_snow),
+            is_hail = COALESCE($[is_hail], is_hail)
+        WHERE location_id = $[location_id] AND date_id = $[date_id] AND hour = $[hour]
+    `, { id, ...updates });
+
 module.exports = {
     getLocations,
     getDates,
@@ -63,5 +79,6 @@ module.exports = {
     getDateByDateString,
     createForecast,
     updateForecast,
+    updateAllForecast,
     deleteForecast
 };
