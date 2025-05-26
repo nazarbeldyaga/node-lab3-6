@@ -6,6 +6,34 @@ const locationsPath = path.join(__dirname, '../data/locations.json');
 const datesPath = path.join(__dirname, '../data/dates.json');
 const forecastsPath = path.join(__dirname, '../data/forecasts.json');
 
+const saveForecast = async (newForecast) => {
+    try {
+        const forecasts = await getForecasts();
+
+        const existingIndex = forecasts.findIndex(f =>
+            f.location_id === newForecast.location_id &&
+            f.date_id === newForecast.date_id &&
+            f.hour === newForecast.hour
+        );
+
+        if (existingIndex !== -1) {
+            newForecast.id = forecasts[existingIndex].id;
+            forecasts[existingIndex] = newForecast;
+        } else {
+            const maxId = forecasts.length ? Math.max(...forecasts.map(f => f.id)) : 0;
+            newForecast.id = maxId + 1;
+            forecasts.push(newForecast);
+        }
+
+        await fs.writeFile(forecastsPath, JSON.stringify(forecasts, null, 2), 'utf8');
+        return newForecast;
+
+    } catch (error) {
+        console.error('Помилка при збереженні прогнозу:', error);
+        throw error;
+    }
+};
+
 // Асинхронні методи з async/await
 const getLocations = async () => {
     const data = await fs.readFile(locationsPath, 'utf8');
@@ -137,6 +165,7 @@ const getForecastsCallback = (callback) => {
 };
 
 module.exports = {
+    saveForecast,
     getLocations,
     getDates,
     getForecasts,

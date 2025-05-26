@@ -1,5 +1,22 @@
 const dayService = require('../services/dayService');
 
+// Оновлення погоди
+const updateForecast = async (req, res) => {
+    try {
+        const result = await dayService.updateForecast(req.body);
+        res.render('admin/result', {
+            title: "Результат",
+            result
+        });
+    } catch (error) {
+        console.error('Помилка при оновленні погоди:', error);
+        res.status(500).render('error', { 
+            title: 'Помилка', 
+            message: 'Не вдалося оновити прогноз погоди' 
+        });
+    }
+};
+
 // Версія з async/await
 const searchByDay = async (req, res) => {
     const { location_id, date } = req.query;
@@ -82,6 +99,7 @@ const renderForecastPage = (res, data, date) => {
 };
 
 module.exports = { 
+    updateForecast,
     searchByDay,
     searchByDayCallback,
     searchByDayPromise,

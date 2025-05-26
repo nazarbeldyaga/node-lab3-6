@@ -1,5 +1,33 @@
 const forecastRepository = require('../repositories/forecastRepository');
 
+const updateForecast = async (weatherData) => {
+    const dates = await forecastRepository.getDates();
+    const dateObj = dates.find(d => d.date === weatherData.date);
+    const date_id = dateObj ? dateObj.id : null;
+
+    if (!date_id) throw new Error('Invalid date: не знайдено date_id');
+
+    const hour = parseInt(weatherData.time.split(':')[0], 10);
+
+    const forecast = {
+        location_id: Number(weatherData.location_id),
+        date_id,
+        hour,
+        temperature: Number(weatherData.temperature),
+        wind_direction: weatherData.wind_direction,
+        wind_speed: Number(weatherData.wind_speed),
+        precipitation: Number(weatherData.precipitation),
+        cloud_type: weatherData.cloud_type,
+        is_rain: weatherData.is_rain === 'on',
+        is_thunderstorm: weatherData.is_thunderstorm === 'on',
+        is_snow: weatherData.is_snow === 'on',
+        is_hail: weatherData.is_hail === 'on',
+    };
+
+    const savedForecast = await forecastRepository.saveForecast(forecast);
+    return savedForecast;
+};
+
 // Метод з використанням async/await
 const getForecastByDateAndLocation = async (locationId, dateStr) => {
     const locations = await forecastRepository.getLocations();
@@ -114,6 +142,7 @@ const getForecastByDateAndLocationCallback = (locationId, dateStr, callback) => 
 };
 
 module.exports = { 
+    updateForecast,
     getForecastByDateAndLocation,
     getForecastByDateAndLocationSync,
     getForecastByDateAndLocationPromise,
