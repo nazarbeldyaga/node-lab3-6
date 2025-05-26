@@ -34,6 +34,36 @@ const saveForecast = async (newForecast) => {
     }
 };
 
+const saveDate = async (dateData) => {
+    const dates = await getDates();
+    dates.push(dateData);
+
+    dates.sort((a, b) => a.id - b.id);
+
+    await fs.writeFile(
+        path.join(__dirname, '../data/dates.json'),
+        JSON.stringify(dates, null, 2)
+    );
+
+    return dateData;
+};
+
+const deleteForecast = async (forecastId) => {
+    const forecasts = await getForecasts();
+    const updatedForecasts = forecasts.filter(f => f.id !== forecastId);
+
+    if (forecasts.length === updatedForecasts.length) {
+        throw new Error(`Прогноз з id ${forecastId} не знайдено`);
+    }
+
+    await fs.writeFile(
+        path.join(__dirname, '../data/forecasts.json'),
+        JSON.stringify(updatedForecasts, null, 2)
+    );
+
+    return { deleted: true, id: forecastId };
+};
+
 // Асинхронні методи з async/await
 const getLocations = async () => {
     const data = await fs.readFile(locationsPath, 'utf8');
@@ -177,5 +207,7 @@ module.exports = {
     getForecastsPromise,
     getLocationsCallback,
     getDatesCallback,
-    getForecastsCallback
+    getForecastsCallback,
+    saveDate,
+    deleteForecast
 };

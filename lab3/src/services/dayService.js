@@ -5,7 +5,7 @@ const updateForecast = async (weatherData) => {
     const dateObj = dates.find(d => d.date === weatherData.date);
     const date_id = dateObj ? dateObj.id : null;
 
-    if (!date_id) throw new Error('Invalid date: не знайдено date_id');
+    if (!date_id) throw new Error('Невірна дата: не знайдено date_id');
 
     const hour = parseInt(weatherData.time.split(':')[0], 10);
 
@@ -24,11 +24,72 @@ const updateForecast = async (weatherData) => {
         is_hail: weatherData.is_hail === 'on',
     };
 
-    const savedForecast = await forecastRepository.saveForecast(forecast);
-    return savedForecast;
+    return await forecastRepository.saveForecast(forecast);
 };
 
-// Метод з використанням async/await
+const createForecast = async (weatherData) => {
+    const dates = await forecastRepository.getDates();
+
+    const dateExists = dates.some(d => d.date === weatherData.date);
+    
+    if (dateExists) {
+        throw new Error('Дата вже існує. Для оновлення використовуйте функцію оновлення.');
+    }
+
+    const newDateId = dates.length > 0 ? Math.max(...dates.map(d => d.id)) + 1 : 1;
+    const newDate = {
+        id: newDateId,
+        date: weatherData.date
+    };
+
+    await forecastRepository.saveDate(newDate);
+
+    const hour = parseInt(weatherData.time.split(':')[0], 10);
+    
+    const forecast = {
+        location_id: Number(weatherData.location_id),
+        date_id: newDateId,
+        hour,
+        temperature: Number(weatherData.temperature),
+        wind_direction: weatherData.wind_direction,
+        wind_speed: Number(weatherData.wind_speed),
+        precipitation: Number(weatherData.precipitation),
+        cloud_type: weatherData.cloud_type,
+        is_rain: weatherData.is_rain === 'on',
+        is_thunderstorm: weatherData.is_thunderstorm === 'on',
+        is_snow: weatherData.is_snow === 'on',
+        is_hail: weatherData.is_hail === 'on',
+    };
+    
+    const savedForecast = await forecastRepository.saveForecast(forecast);
+    return { date: newDate, forecast: savedForecast };
+};
+
+const deleteForecastByDateAndLocation = async (locationId, dateStr) => {
+    const dates = await forecastRepository.getDates();
+    const forecasts = await forecastRepository.getForecasts();
+
+    const dateObj = dates.find(d => d.date === dateStr);
+    
+    if (!dateObj) {
+        throw new Error('Дата не знайдена');
+    }
+
+    const forecastsToDelete = forecasts.filter(
+        f => f.location_id === locationId && f.date_id === dateObj.id
+    );
+    
+    if (forecastsToDelete.length === 0) {
+        throw new Error('Прогнози для цієї дати та локації не знайдено');
+    }
+
+    for (const forecast of forecastsToDelete) {
+        await forecastRepository.deleteForecast(forecast.id);
+    }
+    
+    return { deletedCount: forecastsToDelete.length };
+};
+
 const getForecastByDateAndLocation = async (locationId, dateStr) => {
     const locations = await forecastRepository.getLocations();
     const dates = await forecastRepository.getDates();
@@ -102,7 +163,6 @@ const getForecastByDateAndLocationCallback = (locationId, dateStr, callback) => 
 
         locationData = locations.find(loc => loc.id === locationId);
 
-        // Отримуємо дати
         forecastRepository.getDatesCallback((err, dates) => {
             if (err || errorOccurred) {
                 if (!errorOccurred) {
@@ -119,7 +179,6 @@ const getForecastByDateAndLocationCallback = (locationId, dateStr, callback) => 
                 return;
             }
 
-            // Отримуємо прогнози
             forecastRepository.getForecastsCallback((err, forecasts) => {
                 if (err || errorOccurred) {
                     if (!errorOccurred) {
@@ -143,6 +202,8 @@ const getForecastByDateAndLocationCallback = (locationId, dateStr, callback) => 
 
 module.exports = { 
     updateForecast,
+    createForecast,
+    deleteForecastByDateAndLocation,
     getForecastByDateAndLocation,
     getForecastByDateAndLocationSync,
     getForecastByDateAndLocationPromise,

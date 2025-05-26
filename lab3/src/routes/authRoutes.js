@@ -3,7 +3,6 @@ const router = express.Router();
 const userService = require('../services/userService');
 
 router.get('/login', (req, res) => {
-    // Якщо користувач вже увійшов, перенаправляємо його
     if (req.session.user) {
         if (req.session.user.role === 'admin') {
             return res.redirect('/admin');
@@ -17,24 +16,19 @@ router.get('/login', (req, res) => {
     });
 });
 
-// Обробка форми входу
 router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-        
-        // Шукаємо користувача за ім'ям
+
         const user = await userService.findUserByUsername(username);
-        
-        // Якщо користувача не знайдено або пароль невірний
+
         if (!user || !(await userService.verifyPassword(password, user.password))) {
             return res.redirect('/auth/login?error=1');
         }
-        
-        // Зберігаємо інформацію про користувача в сесії (без пароля)
+
         const { password: _, ...userWithoutPassword } = user;
         req.session.user = userWithoutPassword;
-        
-        // Перенаправляємо відповідно до ролі
+
         if (user.role === 'admin') {
             return res.redirect('/admin');
         }
@@ -48,7 +42,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Реєстрація нового користувача (опціонально)
 router.get('/register', (req, res) => {
     res.render('auth/register', { title: 'Реєстрація' });
 });
@@ -56,8 +49,7 @@ router.get('/register', (req, res) => {
 router.post('/register', async (req, res) => {
     try {
         const { username, password, confirmPassword } = req.body;
-        
-        // Перевірка паролів
+
         if (password !== confirmPassword) {
             return res.render('auth/register', { 
                 title: 'Реєстрація',
@@ -65,12 +57,11 @@ router.post('/register', async (req, res) => {
                 username
             });
         }
-        
-        // Створення нового користувача
+
         const newUser = await userService.createUser({
             username,
             password,
-            role: 'guest' // За замовчуванням всі нові користувачі - гості
+            role: 'guest'
         });
 
         req.session.user = newUser;

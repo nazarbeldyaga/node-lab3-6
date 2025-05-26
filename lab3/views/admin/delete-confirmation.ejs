@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/admin.css">
+</head>
+<body>
+
+<div class="confirmation-container">
+    <h1>Підтвердження видалення</h1>
+
+    <div class="warning">
+        <h3>Увага! Ця дія не може бути скасована!</h3>
+        <p>Ви впевнені, що хочете видалити всі прогнози для:</p>
+        <ul>
+            <li><strong>Локація:</strong> <%= location.name %></li>
+            <li><strong>Дата:</strong> <%= date.date %></li>
+            <li><strong>Кількість прогнозів:</strong> <%= forecastCount %></li>
+        </ul>
+    </div>
+
+    <form action="/admin/delete" method="POST">
+        <input type="hidden" name="location_id" value="<%= location.id %>">
+        <input type="hidden" name="date" value="<%= date.date %>">
+
+        <div class="action-buttons">
+            <button type="submit" class="delete-btn">Так, видалити</button>
+            <a href="/admin" class="cancel-btn">Скасувати</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
