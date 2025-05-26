@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const dayController = require('../controllers/dayController');
+const forecastRepository = require('../repositories/forecastRepository');
+const db = require('../config/database');
 const path = require('path');
 const fs = require('fs').promises;
 
 router.get('/', async (req, res) => {
-    const locations = JSON.parse(await fs.readFile(path.join(__dirname, '../data/locations.json'), 'utf8'));
-    const dates = JSON.parse(await fs.readFile(path.join(__dirname, '../data/dates.json'), 'utf8'));
+    const locations = await forecastRepository.getLocations(db);
+    const dates = await forecastRepository.getDates(db);
 
     const dateStrings = dates.map(d => d.date);
     const minDate = dateStrings[0];
