@@ -5,13 +5,14 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const logger = require('morgan');
 
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
 const indexRouter = require('./src/routes/index');
 const adminRouter = require('./src/routes/adminRoutes');
 const guestRouter = require('./src/routes/guestRoutes');
 const authRouter = require('./src/routes/authRoutes');
 const errorHandler = require('./src/middlewares/errorHandler');
 const config = require('./config/app.config');
-require('dotenv').config()
 
 const app = express();
 

@@ -1,21 +1,27 @@
 const forecastRepository = require('../repositories/forecastRepository');
 
-// Метод з використанням async/await
 const getForecastByDateAndLocation = async (locationId, dateStr) => {
-    const locations = await forecastRepository.getLocations();
-    const dates = await forecastRepository.getDates();
-    const forecasts = await forecastRepository.getForecasts();
+    try {
+        // Отримуємо інформацію про локацію
+        const location = await forecastRepository.getLocationById(locationId);
+        if (!location) {
+            return { location: null, date: null, forecast: [] };
+        }
 
-    const location = locations.find(loc => loc.id === locationId);
-    const date = dates.find(d => d.date === dateStr);
+        // Отримуємо інформацію про дату
+        const date = await forecastRepository.getDateByDateString(dateStr);
+        if (!date) {
+            return { location, date: null, forecast: [] };
+        }
 
-    if (!date) return { location, date: null, forecast: [] };
+        // Отримуємо прогноз
+        const forecast = await forecastRepository.getForecastsByLocationAndDate(locationId, date.id);
 
-    const forecast = forecasts.filter(f => f.location_id === locationId && f.date_id === date.id);
-
-    return { location, date, forecast };
+        return { location, date, forecast };
+    } catch (error) {
+        console.error('Помилка при отриманні прогнозу:', error);
+        throw error;
+    }
 };
 
-module.exports = { 
-    getForecastByDateAndLocation
-};
+module.exports = { getForecastByDateAndLocation }
