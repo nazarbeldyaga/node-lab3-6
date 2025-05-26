@@ -1,13 +1,12 @@
-const { Pool } = require('pg');
+const pgp = require('pg-promise')();
 const path = require('path');
 const dotenv = require('dotenv');
 
-// Завантажуємо змінні середовища
-const envPath = path.resolve(__dirname, '../../../.env');
-dotenv.config({ path: envPath });
+// Завантаження змінних середовища
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
-// Створюємо пул підключень
-const pool = new Pool({
+// Ініціалізація бази даних
+const db = pgp({
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     host: 'localhost',
@@ -15,21 +14,14 @@ const pool = new Pool({
     database: process.env.POSTGRES_DB
 });
 
-// Додаємо обробники подій
-pool.on('connect', () => {
-    console.log('Успішне підключення до бази даних');
-});
-
-pool.on('error', (err) => {
-    console.error('Помилка пулу підключень до бази даних:', err);
-});
-
-pool.query('SELECT NOW()', (err, res) => {
-    if (err) {
-        console.error('Помилка підключення до бази даних при ініціалізації:', err);
-    } else {
-        console.log('Підключення до бази даних успішне. Поточний час на сервері:', res.rows[0].now);
+// Перевірка з'єднання
+(async () => {
+    try {
+        const now = await db.one('SELECT NOW()');
+        console.log('Підключення до бази даних успішне. Поточний час:', now.now);
+    } catch (error) {
+        console.error('Помилка підключення до бази даних при ініціалізації:', error);
     }
-});
+})();
 
-module.exports = pool;
+module.exports = db;
