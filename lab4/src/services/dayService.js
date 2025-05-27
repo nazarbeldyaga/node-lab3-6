@@ -52,25 +52,21 @@ const createForecastTransaction = async (weatherData) => {
             is_hail: weatherData.is_hail === 'on',
         };
 
+        console.log('Перевірка існуючого прогнозу:', {
+            location_id: newForecast.location_id,
+            date_id: newForecast.date_id,
+            hour: newForecast.hour
+        });
+
         const existingForecast = await repo.getForecastsByLocationAndDateAndHour(t, newForecast.location_id, newForecast.date_id, newForecast.hour);
-        if (existingForecast) throw new Error('Прогноз на вказані дату, місто та годину вже існує ❌');
+        console.log('Результат перевірки:', existingForecast);
 
-        // Якщо все добре, то створити прогноз
-        const created = await repo.createForecast(t, newForecast);
-        return {  success: true, updated: created };
-    });
-};
-
-// Оновлення прогнозу
-const updateForecastTransaction = async (id, updates) => {
-    return db.tx(async t => {
-        if (updates.temperature && updates.temperature > MAX_TEMPERATURE_CELSIUS) {
-            throw new Error('The temperature exceeds the permissible limit');
+        if (existingForecast && Object.keys(existingForecast).length > 0) {
+            throw new Error('Прогноз на вказані дату, місто та годину вже існує ❌');
         }
 
-        const result = await repo.updateForecast(t, id, updates);
-        if (result.rowCount === 0) throw new Error('Forecast not found');
-        return true;
+        const created = await repo.createForecast(t, newForecast);
+        return { success: true, updated: created };
     });
 };
 
@@ -113,7 +109,7 @@ const deleteForecastTransaction = async (weatherData) => {
         const dates = await repo.getDates(t);
         const dateObj = dates.find(d => d.date === weatherData.date);
         const date_id = dateObj ? dateObj.id : null;
-        if (!date_id) throw new Error('Invalid date: не знайдено date_id');
+        if (!date_id) throw new Error('Такого дня не знайдено date_id');
 
         const hour = parseInt(weatherData.time.split(':')[0], 10);
 
@@ -131,7 +127,6 @@ const deleteForecastTransaction = async (weatherData) => {
 module.exports = {
     getForecastByDateAndLocation,
     createForecastTransaction,
-    updateForecastTransaction,
     updateAllForecastTransaction,
     deleteForecastTransaction
 };

@@ -41,28 +41,34 @@ const getDateByDateString = (db, dateStr) =>
     db.oneOrNone("SELECT id, to_char(date, 'YYYY-MM-DD') as date, is_weekend FROM dates WHERE date = $1::date", [dateStr]);
 
 // CRUD для forecasts
-const createForecast = (db, forecast) =>
-    db.one(`
+const createForecast = async (t, forecast) => {
+    const maxIdResult = await t.oneOrNone('SELECT MAX(id) FROM forecasts');
+    const newId = maxIdResult && maxIdResult.max ? parseInt(maxIdResult.max) + 1 : 1;
+    
+    return t.one(`
         INSERT INTO forecasts (
-            location_id, date_id, hour, temperature, wind_direction, wind_speed,
+            id, location_id, date_id, hour, temperature, wind_direction, wind_speed,
             precipitation, cloud_type, is_rain, is_thunderstorm, is_snow, is_hail
         ) VALUES (
-            $[location_id], $[date_id], $[hour], $[temperature], $[wind_direction], $[wind_speed],
-            $[precipitation], $[cloud_type], $[is_rain], $[is_thunderstorm], $[is_snow], $[is_hail]
+            $1, $2, $3, $4, $5, $6, $7,
+            $8, $9, $10, $11, $12, $13
         ) RETURNING *
-    `, forecast);
-
-const updateForecast = (db, id, updates) =>
-    db.result(`
-        UPDATE forecasts SET
-            temperature = $[temperature],
-            wind_speed = $[wind_speed],
-            precipitation = $[precipitation]
-        WHERE id = $[id]
-    `, { id, ...updates });
-
-const deleteForecast = (db, id) =>
-    db.result('DELETE FROM forecasts WHERE id = $1', [id]);
+    `, [
+        newId,
+        forecast.location_id, 
+        forecast.date_id, 
+        forecast.hour, 
+        forecast.temperature,
+        forecast.wind_direction, 
+        forecast.wind_speed, 
+        forecast.precipitation, 
+        forecast.cloud_type,
+        forecast.is_rain, 
+        forecast.is_thunderstorm, 
+        forecast.is_snow, 
+        forecast.is_hail
+    ]);
+}
 
 // Update для адміністратора
 const updateForecastAdmin = (db, updates) =>
@@ -95,7 +101,6 @@ module.exports = {
     getLocationById,
     getDateByDateString,
     createForecast,
-    updateForecast,
     updateForecastAdmin,
     deleteForecastAdmin
 };

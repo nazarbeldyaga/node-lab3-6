@@ -3,7 +3,6 @@ const path = require('path');
 
 const usersFilePath = path.join(__dirname, '../data/users.json');
 
-// Отримати всіх користувачів з файлу
 const getUsers = async () => {
     try {
         const data = await fs.readFile(usersFilePath, 'utf8');
@@ -14,7 +13,6 @@ const getUsers = async () => {
     }
 };
 
-// Зберегти користувачів у файл
 const saveUsers = async (users) => {
     try {
         await fs.writeFile(usersFilePath, JSON.stringify(users, null, 2), 'utf8');
