@@ -37,9 +37,15 @@ const createForecastTransaction = async (weatherData) => {
 
         const hour = parseInt(weatherData.time.split(':')[0], 10);
 
+        const date = dateObj ? dateObj.date : null;
+        const locations = await repo.getLocations(t);
+        const location_name = locations.find(loc => loc.id === Number(weatherData.location_id)).name;
+
         const newForecast = {
             location_id: Number(weatherData.location_id),
             date_id,
+            location_name: location_name,
+            date,
             hour,
             temperature: Number(weatherData.temperature),
             wind_direction: weatherData.wind_direction,
@@ -80,9 +86,15 @@ const updateAllForecastTransaction = async (weatherData) => {
 
         const hour = parseInt(weatherData.time.split(':')[0], 10);
 
+        const date = dateObj ? dateObj.date : null;
+        const locations = await repo.getLocations(t);
+        const location_name = locations.find(loc => loc.id === Number(weatherData.location_id)).name;
+
         const updates = {
             location_id: Number(weatherData.location_id),
             date_id,
+            location_name: location_name,
+            date,
             hour,
             temperature: Number(weatherData.temperature),
             wind_direction: weatherData.wind_direction,

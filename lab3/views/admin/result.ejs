@@ -1,17 +1,30 @@
-<br>
-<h2>Погода успішно оновлена!</h2>
-<div style="margin-top: 20px;">
-  <h3>Оновлений прогноз:</h3>
-  <ul>
-    <li><strong>Година:</strong> <%= result.hour %>:00</li>
-    <li><strong>Температура:</strong> <%= result.temperature %>°C</li>
-    <li><strong>Напрям вітру:</strong> <%= result.wind_direction %></li>
-    <li><strong>Швидкість вітру:</strong> <%= result.wind_speed %> м/с</li>
-    <li><strong>Опади:</strong> <%= result.precipitation %> мм</li>
-    <li><strong>Тип хмар:</strong> <%= result.cloud_type %></li>
-    <li><strong>Дощ:</strong> <%= result.is_rain ? 'Так' : 'Ні' %></li>
-    <li><strong>Гроза:</strong> <%= result.is_thunderstorm ? 'Так' : 'Ні' %></li>
-    <li><strong>Сніг:</strong> <%= result.is_snow ? 'Так' : 'Ні' %></li>
-    <li><strong>Град:</strong> <%= result.is_hail ? 'Так' : 'Ні' %></li>
-  </ul>
-</div>
+<!DOCTYPE html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/stylesheets/styles.css"/>
+        <link rel="stylesheet" href="/stylesheets/admin.css"/>
+    </head>
+    <body>
+        <h2><%= message%></h2>
+        <div>
+            <% if (result && result.updated) { %>
+                <h1><%= result.updated.location_name %> / <%= result.updated.date %></h1>
+                <ul>
+                    <li><strong>Година:</strong> <%= result.updated.hour %>:00</li>
+                    <li><strong>Температура:</strong> <%= result.updated.temperature %>°C</li>
+                    <li><strong>Напрям вітру:</strong> <%= result.updated.wind_direction %></li>
+                    <li><strong>Швидкість вітру:</strong> <%= result.updated.wind_speed %> м/с</li>
+                    <li><strong>Опади:</strong> <%= result.updated.precipitation %> мм</li>
+                    <li><strong>Тип хмар:</strong> <%= result.updated.cloud_type %></li>
+                    <li><strong>Дощ:</strong> <%= result.updated.is_rain ? 'Так' : 'Ні' %></li>
+                    <li><strong>Гроза:</strong> <%= result.updated.is_thunderstorm ? 'Так' : 'Ні' %></li>
+                    <li><strong>Сніг:</strong> <%= result.updated.is_snow ? 'Так' : 'Ні' %></li>
+                    <li><strong>Град:</strong> <%= result.updated.is_hail ? 'Так' : 'Ні' %></li>
+                </ul>
+            <% } %>
+        </div>
+        <a href="/admin" class="admin-results__button-back">Повернутись</a>
+    </body>
+</html>

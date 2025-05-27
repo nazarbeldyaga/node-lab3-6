@@ -58,6 +58,12 @@
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     align-items: flex-start;
+    width: 600px;
+}
+
+.admin-results__button-back {
+    margin-top: 20px;
+    color: #898ed4;
 }
 
 /* Стилі для повідомлень про успіх */
