@@ -1,0 +1,9 @@
+<h2>Результат "<%= searchTerm %>"</h2>
+<% if (day != undefined) { %>
+    <h1><%= day.date %></h1>
+    <h2><%= day.is_weekend %></h2>
+<% } else { %>
+    <span>No Data</span>
+<% } %>
+
+<a href="/calendar">Back to Search</a>

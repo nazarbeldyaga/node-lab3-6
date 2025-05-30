@@ -1,14 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const bookController = require('../controllers/bookController');
+const dayController = require('../controllers/dayController');
+const forecastRepository = require('../repositories/forecastRepository');
 const { isAdmin } = require('../middlewares/auth');
+const db = require('../config/database');
 
-router.get('/', isAdmin, bookController.getAllBooks);
-router.get('/create', isAdmin, bookController.createBookForm);
-router.post('/create', isAdmin, bookController.createBook);
-router.get('/edit/:id', isAdmin, bookController.editBookForm);
-router.post('/edit/:id', isAdmin, bookController.updateBook);
-router.get('/delete/:id', isAdmin, bookController.confirmDelete);
-router.post('/delete/:id', isAdmin, bookController.deleteBook);
+router.use(isAdmin);
+
+router.get('/', async (req, res) => {
+    const locations = await forecastRepository.getLocations(db);
+
+    res.render('admin/index', {
+        title: 'Прогноз погоди - Адмін панель',
+        locations,
+        username: req.session.user.username
+    });
+});
+
+router.post('/createForecast', dayController.createForecast);
+
+router.post('/updateForecast', dayController.updateForecast);
+
+router.post('/deleteForecast', dayController.deleteForecast);
 
 module.exports = router;

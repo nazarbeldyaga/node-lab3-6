@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/admin.css">
+</head>
+<body>
+
+<h2>Зміна прогнозу погоди</h2>
+
+<form action="/admin/updateForecast" method="POST">
+    <div class="form-container">
+        
+        <div class="form-section">
+            <label for="location_id">Оберіть локацію:</label>
+            <select name="location_id" required>
+                <% locations.forEach(loc => { %>
+                    <option value="<%= loc.id %>"><%= loc.name %></option>
+                <% }) %>
+            </select>
+
+            <label for="date">Оберіть дату:</label>
+            <input type="date" name="date">
+
+            <label for="time">Оберіть час:</label>
+            <select name="time" required>
+                <option value="00:00">00:00</option>
+                <option value="03:00">03:00</option>
+                <option value="06:00">06:00</option>
+                <option value="09:00">09:00</option>
+                <option value="12:00">12:00</option>
+                <option value="15:00">15:00</option>
+                <option value="18:00">18:00</option>
+                <option value="21:00">21:00</option>
+            </select>
+        </div>
+
+        <div class="form-section">
+            <label for="temperature">Температура (°C):</label>
+            <input type="number" name="temperature" step="1" min="-100" max="100" value="0" required>
+
+            <label for="wind_direction">Напрям вітру:</label>
+            <select name="wind_direction" required>
+                <option value="Пн">Північний</option>
+                <option value="ПнЗх">Північно-західний</option>
+                <option value="ПнСх">Північно-Східний</option>
+                <option value="Сх">Східний</option>
+                <option value="Зх">Західний</option>
+                <option value="Пд">Південний</option>
+                <option value="ПдЗх">Південно-західний</option>
+                <option value="ПдСх">Південно-східний</option>
+            </select>
+
+            <label for="wind_speed">Швидкість вітру (м/с):</label>
+            <input type="number" name="wind_speed" step="1" min="0" max="120" value="0" required>
+
+            <label for="precipitation">Кількість опадів (мм):</label>
+            <input type="number" name="precipitation" step="0.1" min="0" max="100" value="0" required>
+
+            <label for="cloud_type">Тип хмарності:</label>
+            <select name="cloud_type" required>
+                <option value="сонячно">Сонячно</option>
+                <option value="частково хмарно">Частково хмарно</option>
+                <option value="хмарно">Хмарно</option>
+            </select>
+
+            <label><input type="checkbox" name="is_rain"> Дощ</label>
+            <label><input type="checkbox" name="is_thunderstorm"> Гроза</label>
+            <label><input type="checkbox" name="is_snow"> Сніг</label>
+            <label><input type="checkbox" name="is_hail"> Град</label>
+        </div>
+    </div>
+
+    <br>
+
+    <button type="submit" formaction="/admin/createForecast" formmethod="POST">Додати</button>
+    <button type="submit">Змінити</button>
+    <button type="submit" formaction="/admin/deleteForecast" formmethod="POST"
+        onclick="return confirm('Ви впевнені, що хочете видалити прогноз?')">Видалити</button>
+</form>
+
+</body>
+</html>
