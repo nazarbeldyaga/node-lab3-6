@@ -107,21 +107,14 @@ const searchByDay = (req, res) => {
     }
 };
 
-const getLocations = (req, res) => {
-    try {
-        fetch("http://localhost:3001/api/locations")
+const getLocations = async (req, res) => {
+        await fetch("http://localhost:3001/api/locations")
             .then((response) => response.json())
             .then(() => {
+                console.log("AAAAAAGDGDG")
                 console.log(response);
                 return response;
             });
-    } catch (error) {
-        console.error("Помилка при отриманні локацій:", error);
-        res.status(500).render("error", {
-            title: "Помилка",
-            message: "Помилка при отриманні локацій"
-        });
-    }
 };
 
 // Рендер

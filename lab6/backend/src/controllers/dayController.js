@@ -50,6 +50,8 @@ const getLocations = (req, res) => {
     try {
         const db = req.app.get('db');
         const locations = forecastRepository.getLocations(db);
+        console.log(locations)
+        
         return locations;
     } catch (error) {
         console.error('Error fetching locations:', error);

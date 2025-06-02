@@ -3,8 +3,9 @@ const Location = require('../models/Location');
 const DateModel = require('../models/Date');
 const { Op, Sequelize } = require('sequelize');
 
-const getLocations = async (t) => {
-    return await Location.findAll({ order: [['id', 'ASC']] });
+const getLocations = (t) => {
+    console.log("REPOOO")
+    return Location.findAll({ order: [['id', 'ASC']] });
 };
 
 const getDates = async (t) => {

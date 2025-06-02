@@ -4,10 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./src/routes/index');
-var authRouter = require('./src/routes/authRoutes');
-var adminRouter = require('./src/routes/adminRoutes');
-var calendarRouter = require('./src/routes/calendarRoutes');
 var forecastApiRouter = require('./src/routes/forecastRoutes');
 var locationApiRouter = require('./src/routes/locationRoutes');
 var errorHandler = require('./src/middlewares/errorHandler');
@@ -33,17 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('db', sequelize);
 
 // Роути
-app.use('/', indexRouter);
-app.use('/auth', authRouter);
-app.use('/admin', adminRouter);
-app.use('/calendar', calendarRouter);
 app.use('/api/forecasts', forecastApiRouter);
 app.use('/api/locations', locationApiRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
 
 // error handler
 app.use(errorHandler);
