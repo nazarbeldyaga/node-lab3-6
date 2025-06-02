@@ -48060,19 +48060,19 @@
     "is_hail": false
   },
   {
-    "id": 3213,
     "location_id": 14,
     "date_id": 12,
     "hour": 12,
-    "temperature": 17,
-    "wind_direction": "Пн",
-    "wind_speed": 7,
-    "precipitation": 1.7,
-    "cloud_type": "частково хмарно",
+    "temperature": 100,
+    "wind_direction": "ПнСх",
+    "wind_speed": 1,
+    "precipitation": 2,
+    "cloud_type": "сонячно",
     "is_rain": false,
     "is_thunderstorm": false,
-    "is_snow": false,
-    "is_hail": false
+    "is_snow": true,
+    "is_hail": false,
+    "id": 3213
   },
   {
     "id": 3214,
