@@ -8,8 +8,8 @@ var indexRouter = require('./src/routes/index');
 var authRouter = require('./src/routes/authRoutes');
 var adminRouter = require('./src/routes/adminRoutes');
 var calendarRouter = require('./src/routes/calendarRoutes');
-var forecastApiRouter = require('./src/routes/forecast');
-var locationApiRouter = require('./src/routes/location');
+var forecastApiRouter = require('./src/routes/forecastRoutes');
+var locationApiRouter = require('./src/routes/locationRoutes');
 var errorHandler = require('./src/middlewares/errorHandler');
 const { sequelize } = require('./src/config/sequelize');
 
