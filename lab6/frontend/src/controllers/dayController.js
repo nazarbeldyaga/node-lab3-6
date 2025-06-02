@@ -26,7 +26,7 @@ const createForecast = (req, res) => {
     }
 };
 
-const updateForecast = async (req, res) => {
+const updateForecast = (req, res) => {
     try {
         const updates = req.body;
 
@@ -54,7 +54,7 @@ const updateForecast = async (req, res) => {
     }
 };
 
-const deleteForecast = async (req, res) => {
+const deleteForecast = (req, res) => {
     const toDelete = req.body;
 
     try {
@@ -82,18 +82,17 @@ const deleteForecast = async (req, res) => {
     }
 };
 
-const searchByDay = async (req, res) => {
+const searchByDay = (req, res) => {
     const { location_id, date } = req.query;
     const locationId = parseInt(location_id);
 
     try {
-        const data = await dayService.getForecastByDateAndLocation(locationId, date);
         fetch("localhost:3001/api/forecasts/", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({locationId: locationId, date: date})
+            body: JSON.stringify({ locationId: locationId, date: date })
         })
             .then((response) => response.json())
             .then(() => {
@@ -104,6 +103,23 @@ const searchByDay = async (req, res) => {
         res.status(500).render("error", {
             title: "Помилка",
             message: "Помилка при отриманні прогнозу погоди"
+        });
+    }
+};
+
+const getLocations = (req, res) => {
+    try {
+        fetch("localhost:3001/api/locations/")
+            .then((response) => response.json())
+            .then(() => {
+                console.log(response);
+                return response;
+            });
+    } catch (error) {
+        console.error("Помилка при отриманні локацій:", error);
+        res.status(500).render("error", {
+            title: "Помилка",
+            message: "Помилка при отриманні локацій"
         });
     }
 };
@@ -127,5 +143,6 @@ module.exports = {
     createForecast,
     deleteForecast,
     updateForecast,
-    searchByDay
+    getLocations,
+    searchByDay,
 };

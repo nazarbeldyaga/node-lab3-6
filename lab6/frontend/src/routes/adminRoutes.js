@@ -1,14 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const dayController = require('../controllers/dayController');
-const forecastRepository = require('../repositories/forecastRepository');
-const { isAdmin } = require('../middlewares/auth');
-const db = require('../config/database');
-
-router.use(isAdmin);
 
 router.get('/', async (req, res) => {
-    const locations = await forecastRepository.getLocations(db);
+    const locations = getLocations();
 
     res.render('admin/index', {
         title: 'Прогноз погоди - Адмін панель',
