@@ -1,0 +1,44 @@
+<div class="auth">
+    <h1>Вхід в систему</h1>
+
+    <% if (locals.error) { %>
+        <div class="error-message">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <form class="auth__form" action="/auth/login" method="POST">
+        <label class="form__label">
+            Логін:
+            <input type="text" name="username" required autofocus>
+        </label>
+
+        <label class="form__label">
+            Пароль:
+            <input type="password" name="password" required>
+        </label>
+
+        <button type="submit" class="btn-login">Увійти</button>
+    </form>
+
+    <span class="auth__swap-wrapper">
+        Немає облікового запису?
+        <a href="/auth/register" class="swap-wrapper__link">Зареєструватися</a>
+    </span>
+
+    <div class="login-info">
+        <p>Тестові облікові записи:</p>
+        <div class="test-accounts">
+            <div class="account">
+                <strong>Адміністратор:</strong>
+                <p>Логін: admin</p>
+                <p>Пароль: 123</p>
+            </div>
+            <div class="account">
+                <strong>Гість:</strong>
+                <p>Логін: guest</p>
+                <p>Пароль: 123</p>
+            </div>
+        </div>
+    </div>
+</div>

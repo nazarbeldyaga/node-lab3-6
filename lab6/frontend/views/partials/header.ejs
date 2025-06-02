@@ -1,8 +1,23 @@
-<header>
-    <h1>Library Catalog</h1>
-    <nav>
-        <a href="/">Home</a> |
-        <a href="/guest">Guest</a> |
-        <a href="/admin">Admin</a>
+<header class="header">
+    <div class="header__logo">
+        <span class="logo"></span>
+        <h1>Прогноз погоди</h1>
+    </div>
+
+    <nav class="header__nav">
+        <a href="/" class="nav__link">Головна</a></li>
+        <a href="/calendar" class="nav__link">Календар</a>
+        <% if (locals.user && locals.user.role === 'admin') { %>
+            <a href="/admin" class="nav__link">Адмін панель</a>
+        <% } %>
     </nav>
+
+    <div class="header__user">
+        <% if (locals.user) { %>
+            <span>Вітаємо, <%= user.username %>!</span>
+            <a href="/auth/logout" class="user__logout-button">Вийти</a>
+        <% } else { %>
+            <a href="/auth/login" class="user__login-button">Увійти</a>
+        <% } %>
+    </div>
 </header>

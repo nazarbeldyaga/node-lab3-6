@@ -1,15 +1,20 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const logger = require('morgan');
 
-var indexRouter = require('./src/routes/index');
-var guestRouter = require('./src/routes/guestRoutes');
-var adminRouter = require('./src/routes/adminRoutes');
-var errorHandler = require('./src/middlewares/errorHandler');
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-var app = express();
+const indexRouter = require('./src/routes/index');
+const adminRouter = require('./src/routes/adminRoutes');
+const calendarRouter = require('./src/routes/calendarRoutes');
+const authRouter = require('./src/routes/authRoutes');
+const errorHandler = require('./src/middlewares/errorHandler');
+const config = require('./config/app.config');
+
+const app = express();
 
 // view engine setup
 const expressLayouts = require('express-ejs-layouts');
@@ -24,16 +29,31 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/guest', guestRouter);
-app.use('/admin', adminRouter);
+app.use(session({
+  secret: config.session_secret,
+  resave: false, // не зберігати сесію, якщо вона не змінилася
+  saveUninitialized: false, // не створювати сесію, поки щось не збережено
+  cookie: {
+    secure: false, // true тільки для HTTPS
+    maxAge: 3600000 // час життя cookie в мілісекундах (1 година)
+  }
+}));
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) { // Рядок 33
-  next(createError(404));
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
 });
 
-// error handler
+app.use('/', indexRouter);
+app.use('/admin', adminRouter);
+app.use('/calendar', calendarRouter);
+app.use('/auth', authRouter);
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+  next(createError(404, `Сторінку ${req.url} не знайдено`));
+});
+
 app.use(errorHandler);
 
 module.exports = app;

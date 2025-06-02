@@ -1,0 +1,33 @@
+<div class="auth">
+    <h1>Реєстрація</h1>
+
+    <% if (locals.error) { %>
+        <div class="error-message">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <form class="auth__form" action="/auth/register" method="POST">
+        <label class="form__label">
+            Логін:
+            <input type="text" name="username" value="<%= locals.username || '' %>" required>
+        </label>
+
+        <label class="form__label">
+            Пароль:
+            <input type="password" name="password" required>
+        </label>
+
+        <label class="form__label">
+            Підтвердження пароля:
+            <input type="password" name="confirmPassword" required>
+        </label>
+
+        <button type="submit" class="btn-register">Зареєструватися</button>
+    </form>
+    
+    <span class="auth__swap-wrapper">
+        Вже маєте обліковий запис?
+        <a href="/auth/login" class="swap-wrapper__link">Увійти</a>
+    </span>
+</div>

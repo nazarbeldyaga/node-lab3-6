@@ -1,20 +1,27 @@
-const dayService = require('../services/dayService');
-
-const createForecast = async (req, res) => {
+const createForecast = (req, res) => {
     try {
         const newForecast = req.body;
 
-        const result = await dayService.createForecastTransaction(newForecast);
-        res.render('admin/result', {
-            title: "Результат",
-            message: "Прогноз успішно додано ✅",
-            result
-        });
+        fetch("localhost:3001/api/forecasts/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newForecast)
+        })
+            .then((response) => response.json())
+            .then(() => {
+                res.render("admin/result", {
+                    title: "Результат",
+                    message: "Прогноз успішно додано ✅",
+                    result
+                });
+            });
     } catch (error) {
-        console.error('Помилка при додаванні погоди:', error);
-        res.status(500).render('error', {
-            title: 'Помилка',
-            message: error.message || 'Не вдалося додати прогноз погоди'
+        console.error("Помилка при додаванні погоди:", error);
+        res.status(500).render("error", {
+            title: "Помилка",
+            message: error.message || "Не вдалося додати прогноз погоди"
         });
     }
 };
@@ -23,35 +30,54 @@ const updateForecast = async (req, res) => {
     try {
         const updates = req.body;
 
-        const result = await dayService.updateAllForecastTransaction(updates);
-        res.render('admin/result', {
-            title: "Результат",
-            message: "Прогноз успішно оновлено ✅",
-            result
-        });
+        fetch("localhost:3001/api/forecasts/", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updates)
+        })
+            .then((response) => response.json())
+            .then(() => {
+                res.render("admin/result", {
+                    title: "Результат",
+                    message: "Прогноз успішно оновлено ✅",
+                    result
+                });
+            });
     } catch (error) {
-        console.error('Помилка при оновленні погоди:', error);
-        res.status(500).render('error', {
-            title: 'Помилка',
-            message: error.message || 'Не вдалося оновити прогноз погоди'
+        console.error("Помилка при оновленні погоди:", error);
+        res.status(500).render("error", {
+            title: "Помилка",
+            message: error.message || "Не вдалося оновити прогноз погоди"
         });
     }
 };
 
 const deleteForecast = async (req, res) => {
     const toDelete = req.body;
+
     try {
-        const result = await dayService.deleteForecastTransaction(toDelete);
-        res.render('admin/result', {
-            title: "Результат",
-            message: "Прогноз успішно видалено ✅",
-            result
-        });
+        fetch("localhost:3001/api/forecasts/", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(toDelete)
+        })
+            .then((response) => response.json())
+            .then(() => {
+                res.render("admin/result", {
+                    title: "Результат",
+                    message: "Прогноз успішно видалено ✅",
+                    result
+                });
+            });
     } catch (error) {
-        console.error('Помилка при видалити погоди:', error);
-        res.status(500).render('error', {
-            title: 'Помилка',
-            message: error.message || 'Не вдалося видалити прогноз погоди'
+        console.error("Помилка при видалити погоди:", error);
+        res.status(500).render("error", {
+            title: "Помилка",
+            message: error.message || "Не вдалося видалити прогноз погоди"
         });
     }
 };
@@ -62,22 +88,32 @@ const searchByDay = async (req, res) => {
 
     try {
         const data = await dayService.getForecastByDateAndLocation(locationId, date);
-        renderForecastPage(res, data, date);
+        fetch("localhost:3001/api/forecasts/", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({locationId: locationId, date: date})
+        })
+            .then((response) => response.json())
+            .then(() => {
+                renderForecastPage(res, data, date);
+            });
     } catch (error) {
-        console.error('Помилка при отриманні прогнозу:', error);
-        res.status(500).render('error', { 
-            title: 'Помилка', 
-            message: 'Помилка при отриманні прогнозу погоди' 
+        console.error("Помилка при отриманні прогнозу:", error);
+        res.status(500).render("error", {
+            title: "Помилка",
+            message: "Помилка при отриманні прогнозу погоди"
         });
     }
 };
 
 // Рендер
 const renderForecastPage = (res, data, date) => {
-    res.render('calendar/day', {
-        title: 'Прогноз погоди',
-        searchTerm: `${data.location?.name || 'Локація'} — ${date}`,
-        locationName: data.location?.name || 'Невідомо',
+    res.render("calendar/day", {
+        title: "Прогноз погоди",
+        searchTerm: `${data.location?.name || "Локація"} — ${date}`,
+        locationName: data.location?.name || "Невідомо",
         locationId: data.location?.id || null,
         date: data.date?.date || null,
         isWeekend: data.date?.is_weekend,
@@ -87,7 +123,7 @@ const renderForecastPage = (res, data, date) => {
     });
 };
 
-module.exports = { 
+module.exports = {
     createForecast,
     deleteForecast,
     updateForecast,
