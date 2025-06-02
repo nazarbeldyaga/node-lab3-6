@@ -1,4 +1,5 @@
 const dayService = require('../services/dayService');
+const forecastRepository = require('../repositories/forecastRepository');
 
 const createForecast = (req, res) => {
     const newForecast = req.body;
@@ -44,9 +45,22 @@ const searchByDay = (req, res) => {
     }
 };
 
+const getLocations = (req, res) => {
+    console.log("SKGHJKSHGJKS")
+    try {
+        const db = req.app.get('db');
+        const locations = forecastRepository.getLocations(db);
+        return locations;
+    } catch (error) {
+        console.error('Error fetching locations:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 module.exports = {
     createForecast,
     deleteForecast,
     updateForecast,
-    searchByDay
+    searchByDay,
+    getLocations
 };

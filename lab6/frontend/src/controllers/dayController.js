@@ -2,7 +2,7 @@ const createForecast = (req, res) => {
     try {
         const newForecast = req.body;
 
-        fetch("http://localhost:3001/api/forecasts/", {
+        fetch("http://localhost:3001/api/forecasts", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -30,7 +30,7 @@ const updateForecast = (req, res) => {
     try {
         const updates = req.body;
 
-        fetch("http://localhost:3001/api/forecasts/", {
+        fetch("http://localhost:3001/api/forecasts", {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -58,7 +58,7 @@ const deleteForecast = (req, res) => {
     const toDelete = req.body;
 
     try {
-        fetch("http://localhost:3001/api/forecasts/", {
+        fetch("http://localhost:3001/api/forecasts", {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
@@ -87,7 +87,7 @@ const searchByDay = (req, res) => {
     const locationId = parseInt(location_id);
 
     try {
-        fetch("http://localhost:3001/api/forecasts/", {
+        fetch("http://localhost:3001/api/forecasts", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -109,7 +109,7 @@ const searchByDay = (req, res) => {
 
 const getLocations = (req, res) => {
     try {
-        fetch("http://localhost:3001/api/locations/")
+        fetch("http://localhost:3001/api/locations")
             .then((response) => response.json())
             .then(() => {
                 console.log(response);

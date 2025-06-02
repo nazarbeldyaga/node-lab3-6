@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const locationController = require('../controllers/locationController');
+const dayController = require('../controllers/dayController');
 
-router.get('/locations', locationController.getLocations);
+router.get('/', dayController.getLocations);
 
 module.exports = router;
