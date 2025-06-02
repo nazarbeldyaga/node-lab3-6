@@ -3,7 +3,7 @@ const forecastRepository = require('../repositories/forecastRepository');
 
 const createForecast = (req, res) => {
     const newForecast = req.body;
-    
+
     try {
         return dayService.createForecastTransaction(newForecast);
     } catch (error) {
@@ -45,14 +45,11 @@ const searchByDay = (req, res) => {
     }
 };
 
-const getLocations = (req, res) => {
-    console.log("SKGHJKSHGJKS")
+const getLocations = async (req, res) => {
     try {
         const db = req.app.get('db');
-        const locations = forecastRepository.getLocations(db);
-        console.log(locations)
-        
-        return locations;
+        const locations = await forecastRepository.getLocations(db);
+        res.status(200).json(locations);
     } catch (error) {
         console.error('Error fetching locations:', error);
         res.status(500).json({ error: 'Internal server error' });

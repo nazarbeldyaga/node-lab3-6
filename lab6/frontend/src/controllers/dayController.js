@@ -1,3 +1,5 @@
+const {response} = require("express");
+
 const createForecast = (req, res) => {
     try {
         const newForecast = req.body;
@@ -108,13 +110,10 @@ const searchByDay = (req, res) => {
 };
 
 const getLocations = async (req, res) => {
-        await fetch("http://localhost:3001/api/locations")
-            .then((response) => response.json())
-            .then(() => {
-                console.log("AAAAAAGDGDG")
-                console.log(response);
-                return response;
-            });
+        const response = await fetch("http://localhost:3001/api/locations");
+        const locations = await response.json();
+        console.log(locations);
+        return locations;
 };
 
 // Рендер
