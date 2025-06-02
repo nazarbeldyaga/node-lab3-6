@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const dayController = require('../controllers/dayController');
 const { isAdmin } = require('../middlewares/auth');
-const { idValidation, paginationQueryValidation, validationMiddleware } = require('../middlewares/validation/generalValidation');
+const { idValidation, paginationQueryValidation } = require('../middlewares/validation/generalValidation');
+const { validationMiddleware } = require('../middlewares/validation/validationMiddleware')
 const { createOrUpdateForecastValidation } = require('../middlewares/validation/DayValidation');
 
 router.get(

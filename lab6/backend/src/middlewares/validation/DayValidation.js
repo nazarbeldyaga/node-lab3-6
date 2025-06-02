@@ -1,6 +1,6 @@
-import { body } from 'express-validator';
+const { body } = require('express-validator');
 
-export const createOrUpdateForecastValidation = [
+const createOrUpdateForecastValidation = [
     body('location_id')
         .notEmpty().withMessage('Location id is required')
         .isInt().withMessage('Wrong location id format'),
@@ -38,3 +38,7 @@ export const createOrUpdateForecastValidation = [
         .isBoolean().withMessage('Wrong hail format')
         .default(false),
 ]
+
+module.exports = {
+    createOrUpdateForecastValidation
+}

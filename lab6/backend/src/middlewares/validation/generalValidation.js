@@ -1,9 +1,9 @@
-import { param, query } from 'express-validator';
-import DateModel from '../../models/Date.js';
+const { param, query } = require('express-validator');
+const DateModel = require('../../models/Date.js');
 
-export const idValidation = param('id').isInt().withMessage('Wrong id format');
+const idValidation = param('id').isInt().withMessage('Wrong id format');
 
-export const paginationQueryValidation = [
+const paginationQueryValidation = [
   query('page')
     .optional()
     .default(1)
@@ -18,3 +18,8 @@ export const paginationQueryValidation = [
     .optional()
     .isIn(Object.values(DateModel)).withMessage('Wrong status value'),
 ];
+
+module.exports = {
+  idValidation,
+  paginationQueryValidation
+}

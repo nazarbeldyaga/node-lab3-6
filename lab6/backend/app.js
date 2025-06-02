@@ -11,7 +11,7 @@ var calendarRouter = require('./src/routes/calendarRoutes');
 var forecastApiRouter = require('./src/routes/forecastRoutes');
 var locationApiRouter = require('./src/routes/locationRoutes');
 var errorHandler = require('./src/middlewares/errorHandler');
-const { sequelize } = require('./src/config/sequelize');
+const sequelize = require('./src/config/sequelize');
 
 var app = express();
 
@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 // error handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   try {

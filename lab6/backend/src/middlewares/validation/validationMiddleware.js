@@ -1,6 +1,6 @@
-import { validationResult } from 'express-validator';
+const { validationResult } = require('express-validator');
 
-export const validationMiddleware = (
+const validationMiddleware = (
   request,
   response,
   next,
@@ -15,3 +15,7 @@ export const validationMiddleware = (
     next();
   }
 };
+
+module.exports = {
+  validationMiddleware
+}
