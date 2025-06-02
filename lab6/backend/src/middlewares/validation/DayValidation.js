@@ -14,10 +14,10 @@ export const createOrUpdateForecastValidation = [
         .notEmpty().withMessage('Temperature is required')
         .isInt().withMessage('Wrong temperature format'),
     body('cloud_type')
-        .isIn(Object.values(ENUM('сонячно', 'частково хмарно', 'хмарно'))).withMessage('Wrong cloud type value')
+        .isIn(['сонячно', 'частково хмарно', 'хмарно']).withMessage('Wrong cloud type value')
         .default('сонячно'),
     body('wind_direction')
-        .isIn(Object.values(ENUM('Зх', 'Сх', 'Пн', 'Пд', 'ПнЗх', 'ПнСх', 'ПдЗх', 'ПдСх'))).withMessage('Wrong wind direction value')
+        .isIn(['Зх', 'Сх', 'Пн', 'Пд', 'ПнЗх', 'ПнСх', 'ПдЗх', 'ПдСх']).withMessage('Wrong wind direction value')
         .default('Пн'),
     body('wind_speed')
         .isInt().withMessage('Wrong wind speed format')

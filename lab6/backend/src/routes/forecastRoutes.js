@@ -17,9 +17,8 @@ router.get(
             if (locationId) where.locationId = parseInt(locationId);
             if (date) where.date = date;
 
-            // Викликаємо метод контролера
             const forecasts = await dayController.searchByDay({ body: { location_id: locationId, date } }, res);
-            const total = forecasts.length; // Припускаємо, що total можна отримати з сервісу через контролер
+            const total = forecasts.length;
 
             res.status(200).json({
                 data: forecasts,
@@ -37,8 +36,7 @@ router.get(
     [idValidation, validationMiddleware],
     async (req, res) => {
         try {
-            // Викликаємо метод контролера (він поки відсутній, потрібно додати)
-            const forecast = await dayController.getForecastById({ params: { id: req.params.id } }, res);
+            const forecast = await dayController.searchByDay({ params: { id: req.params.id } }, res);
             if (!forecast) return res.status(404).json({ error: 'Forecast not found' });
             res.status(200).json(forecast);
         } catch (error) {

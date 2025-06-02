@@ -1,5 +1,5 @@
 import { param, query } from 'express-validator';
-import DateModel from '../../models/Date';
+import DateModel from '../../models/Date.js';
 
 export const idValidation = param('id').isInt().withMessage('Wrong id format');
 
