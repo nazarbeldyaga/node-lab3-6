@@ -1,6 +1,4 @@
-const Forecast = require('../models/Forecast');
-const Location = require('../models/Location');
-const DateModel = require('../models/Date');
+const { Forecast, Location, DateModel } = require('../models');
 
 const getLocations = async (t) => {
     return await Location.findAll({ order: [['id', 'ASC']] });

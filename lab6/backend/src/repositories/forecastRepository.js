@@ -1,6 +1,4 @@
-const Forecast = require('../models/Forecast');
-const Location = require('../models/Location');
-const DateModel = require('../models/Date');
+const { Forecast, Location, DateModel } = require('../models');
 
 const getLocations = async () => {
     try {
@@ -38,7 +36,6 @@ const getForecastsByLocationAndDateAndHour = async (t, locationId, dateId, hour)
 };
 
 const getForecastPagination = async (t, limit, offset, filter) => {
-    console.log("DGKJDKGHJKDNBJK")
     console.log(limit, offset, filter ? filter : {})
     const { count, rows } = await Forecast.findAndCountAll({
         limit: limit,
@@ -48,9 +45,15 @@ const getForecastPagination = async (t, limit, offset, filter) => {
             ["hour", "ASC"]
         ],
         where: filter,
+        include: [
+            {
+                model: DateModel,
+                as: 'date',
+                attributes: ['id', 'date']
+            }
+        ]
     });
-    console.log(count)
-
+    
     return { count, rows }
 };
 

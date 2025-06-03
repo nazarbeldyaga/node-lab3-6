@@ -21,7 +21,7 @@ const getPaginatedForecast = async (req, res) => {
         }
 
         const result = await response.json();
-        
+
         result.limit = result.limit / 8;
 
         res.render("pagination/index", {
@@ -31,7 +31,12 @@ const getPaginatedForecast = async (req, res) => {
             totalItems: result.totalItems,
             totalPages: result.totalPages,
             currentPage: result.currentPage,
-            locationName: result.locationName
+            locationName: result.locationName,
+            date: new Date(result.date).toLocaleDateString('uk-UA', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
         });
     } catch (error) {
         console.error("Помилка при отриманні даних сторінки front:", error);
@@ -46,7 +51,7 @@ const createForecast = async (req, res) => {
     try {
         const newForecast = req.body;
         const url = "http://localhost:3001/api/forecasts";
-        
+
         // Логування для Postman
         console.log('===== CREATE FORECAST =====');
         console.log('URL:', url);
@@ -69,7 +74,7 @@ const createForecast = async (req, res) => {
 
         const result = await response.json();
         console.log('Response:', JSON.stringify(result, null, 2));
-        
+
         res.render("admin/result", {
             title: "Результат",
             message: "Прогноз успішно додано ",
@@ -88,7 +93,7 @@ const updateForecast = async (req, res) => {
     try {
         const updates = req.body;
         const url = "http://localhost:3001/api/forecasts";
-        
+
         // Логування для Postman
         console.log('===== UPDATE FORECAST =====');
         console.log('URL:', url);
@@ -111,7 +116,7 @@ const updateForecast = async (req, res) => {
 
         const result = await response.json();
         console.log('Response:', JSON.stringify(result, null, 2));
-        
+
         res.render("admin/result", {
             title: "Результат",
             message: "Прогноз успішно оновлено ",
@@ -130,7 +135,7 @@ const deleteForecast = async (req, res) => {
     try {
         const toDelete = req.body;
         const url = "http://localhost:3001/api/forecasts";
-        
+
         // Логування для Postman
         console.log('===== DELETE FORECAST =====');
         console.log('URL:', url);
@@ -153,7 +158,7 @@ const deleteForecast = async (req, res) => {
 
         const result = await response.json();
         console.log('Response:', JSON.stringify(result, null, 2));
-        
+
         res.render("admin/result", {
             title: "Результат",
             message: "Прогноз успішно видалено ",

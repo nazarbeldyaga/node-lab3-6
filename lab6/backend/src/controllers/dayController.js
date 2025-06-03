@@ -40,10 +40,6 @@ const searchByDay = async (req, res) => {
         const { locationId, date } = req.query;
         const locationParsed = parseInt(locationId)
 
-        console.log("DGKHDJKLGHJDVNJKVDJBKN DKLBFDJH")
-        console.log(req.query)
-        console.log(locationParsed)
-
         if (!locationId || !date) {
             return res.status(400).json({ error: "Необхідно вказати locationId та date" });
         }
@@ -117,6 +113,7 @@ const getLocations = async (req, res) => {
 const getPagination = async (req, res) => {
     try {
         const { page, limit, locationId } = req.query;
+        console.log("Pagination")
         console.log(page, limit, locationId)
 
         if (!page || !limit || !locationId) {
