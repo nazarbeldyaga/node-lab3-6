@@ -3,8 +3,16 @@ const {response} = require("express");
 const createForecast = async (req, res) => {
     try {
         const newForecast = req.body;
+        const url = "http://localhost:3001/api/forecasts";
+        
+        // Логування для Postman
+        console.log('===== CREATE FORECAST =====');
+        console.log('URL:', url);
+        console.log('Method: POST');
+        console.log('Body:', JSON.stringify(newForecast, null, 2));
+        console.log('==========================');
 
-        const response = await fetch("http://localhost:3001/api/forecasts", {
+        const response = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -18,6 +26,7 @@ const createForecast = async (req, res) => {
         }
 
         const result = await response.json();
+        console.log('Response:', JSON.stringify(result, null, 2));
         
         res.render("admin/result", {
             title: "Результат",
@@ -36,8 +45,16 @@ const createForecast = async (req, res) => {
 const updateForecast = async (req, res) => {
     try {
         const updates = req.body;
+        const url = "http://localhost:3001/api/forecasts";
+        
+        // Логування для Postman
+        console.log('===== UPDATE FORECAST =====');
+        console.log('URL:', url);
+        console.log('Method: PUT');
+        console.log('Body:', JSON.stringify(updates, null, 2));
+        console.log('==========================');
 
-        const response = await fetch("http://localhost:3001/api/forecasts", {
+        const response = await fetch(url, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -51,6 +68,7 @@ const updateForecast = async (req, res) => {
         }
 
         const result = await response.json();
+        console.log('Response:', JSON.stringify(result, null, 2));
         
         res.render("admin/result", {
             title: "Результат",
@@ -69,8 +87,16 @@ const updateForecast = async (req, res) => {
 const deleteForecast = async (req, res) => {
     try {
         const toDelete = req.body;
+        const url = "http://localhost:3001/api/forecasts";
+        
+        // Логування для Postman
+        console.log('===== DELETE FORECAST =====');
+        console.log('URL:', url);
+        console.log('Method: DELETE');
+        console.log('Body:', JSON.stringify(toDelete, null, 2));
+        console.log('==========================');
 
-        const response = await fetch("http://localhost:3001/api/forecasts", {
+        const response = await fetch(url, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
@@ -84,6 +110,7 @@ const deleteForecast = async (req, res) => {
         }
 
         const result = await response.json();
+        console.log('Response:', JSON.stringify(result, null, 2));
         
         res.render("admin/result", {
             title: "Результат",
@@ -117,7 +144,6 @@ const searchByDay = async (req, res) => {
         }
         
         const data = await response.json();
-        console.log('Отримані дані з API:', data);
 
         if (!data.location || !data.date || !data.forecast) {
             throw new Error('Отримано неповні дані з API');

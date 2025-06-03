@@ -72,7 +72,12 @@ const createForecastTransaction = async (weatherData) => {
         }
 
         const created = await repo.createForecast(t, newForecast);
-        return { success: true, updated: created };
+        return { success: true, updated: {
+            ...newForecast,
+            id: created.id,
+            location_name: location_name,
+            date: date
+        }};
     });
 };
 
