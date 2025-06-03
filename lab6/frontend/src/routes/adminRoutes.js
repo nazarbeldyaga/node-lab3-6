@@ -3,7 +3,7 @@ const router = express.Router();
 const dayController = require('../controllers/dayController');
 
 router.get('/', async (req, res) => {
-    const locations = dayController.getLocations();
+    const locations = await dayController.getLocations();
 
     res.render('admin/index', {
         title: 'Прогноз погоди - Адмін панель',
