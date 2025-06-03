@@ -220,3 +220,39 @@ button:hover {
     border: 1px solid #000000;
 
 }
+
+/* Pagination page */
+
+.city-name {
+    margin: 20px 0 40px;
+}
+
+.period-forecast {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    width: 80vw;
+}
+
+.period-forecast__card {
+    width: 200px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 4px;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 12px 12px #00000020;
+}
+
+.boom {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.boom div {
+    width: 50%;
+}

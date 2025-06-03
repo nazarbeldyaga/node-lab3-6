@@ -6,5 +6,6 @@ router.get('/', dayController.searchByDay);
 router.post('/', dayController.createForecast);
 router.put('/', dayController.updateForecast);
 router.delete('/', dayController.deleteForecast);
+router.get('/pagination', dayController.getPagination);
 
 module.exports = router;

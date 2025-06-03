@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8" />
+        <title><%= title %></title>
+        <link
+            rel="stylesheet"
+            href="/stylesheets/styles.css"
+        />
+    </head>
+    <body>
+        <h2>Календар прогнозу погоди</h2>
+
+        <h3 class="city-name"> <%= locationName %> </h3>
+        
+        <div class="period-forecast">
+            <% for (let i = 0; i < items.length; i += 8) { %>
+                <div class="period-forecast__card">
+                    <%= items[i].date_id %>
+                    <div class="boom">
+                        <div>Hour</div>
+                        <div>Temperature</div>
+                    </div>
+                    <% for (let j = i; j < i + 8 && j < items.length; j++) { %>
+                        <div class="boom">
+                            <div><%= items[j].hour %></div>
+                            <div><%= items[j].temperature %></div>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
+
+            <!-- location_id: DataTypes.INTEGER,
+    date_id: DataTypes.INTEGER,
+    hour: DataTypes.INTEGER,
+    temperature: DataTypes.INTEGER,
+    cloud_type: DataTypes.ENUM('сонячно', 'частково хмарно', 'хмарно'),
+    wind_direction: DataTypes.ENUM('Зх', 'Сх', 'Пн', 'Пд', 'ПнЗх', 'ПнСх', 'ПдЗх', 'ПдСх'),
+    wind_speed: DataTypes.INTEGER,
+    precipitation: DataTypes.FLOAT,
+    is_rain: DataTypes.BOOLEAN,
+    is_thunderstorm: DataTypes.BOOLEAN,
+    is_snow: DataTypes.BOOLEAN,
+    is_hail: DataTypes.BOOLEAN -->
+        </div>
+    </body>
+</html>

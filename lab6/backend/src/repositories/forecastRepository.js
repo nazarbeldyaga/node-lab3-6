@@ -37,6 +37,24 @@ const getForecastsByLocationAndDateAndHour = async (t, locationId, dateId, hour)
     });
 };
 
+const getForecastPagination = async (t, limit, offset, filter) => {
+    console.log("DGKJDKGHJKDNBJK")
+    console.log(limit, offset, filter ? filter : {})
+    const { count, rows } = await Forecast.findAndCountAll({
+        limit: limit,
+        offset: offset,
+        order: [
+            ["date_id", "ASC"],
+            ["hour", "ASC"]
+        ],
+        where: filter,
+    });
+    console.log(count)
+
+    return { count, rows }
+};
+
+
 const getLocationById = async (t, id) => {
     return await Location.findByPk(id);
 };
@@ -87,6 +105,7 @@ const deleteForecastAdmin = async (t, toDelete) => {
 };
 
 module.exports = {
+    getForecastPagination,
     getLocations,
     getDates,
     getForecasts,

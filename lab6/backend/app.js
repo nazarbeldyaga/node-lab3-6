@@ -35,7 +35,7 @@ app.use('/api/locations', locationApiRouter);
 // error handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3002;
+const PORT = 3001;
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   try {

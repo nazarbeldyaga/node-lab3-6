@@ -1,4 +1,46 @@
-const {response} = require("express");
+const getPaginatedForecast = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit);
+    const locationId = parseInt(req.query.locationId) || 1;
+    console.log(locationId)
+
+    try {
+        const response = await fetch(
+            `http://localhost:3001/api/forecasts/pagination?page=${page}&limit=${limit}&locationId=${locationId}`,
+            {
+                method: "GET",
+                headers: {
+                    Accept: "application/json"
+                }
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Помилка при додаванні прогнозу");
+        }
+
+        const result = await response.json();
+        
+        result.limit = result.limit / 8;
+
+        res.render("pagination/index", {
+            message: "Дані сторінки отримано успішно",
+            title: "Локації",
+            items: result.forecast,
+            totalItems: result.totalItems,
+            totalPages: result.totalPages,
+            currentPage: result.currentPage,
+            locationName: result.locationName
+        });
+    } catch (error) {
+        console.error("Помилка при отриманні даних сторінки front:", error);
+        res.status(500).render("error", {
+            title: "Помилка",
+            message: error.message || "Не вдалося отримати дані сторінки"
+        });
+    }
+};
 
 const createForecast = async (req, res) => {
     try {
@@ -22,7 +64,7 @@ const createForecast = async (req, res) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Помилка при додаванні прогнозу');
+            throw new Error(errorData.error || "Помилка при додаванні прогнозу");
         }
 
         const result = await response.json();
@@ -64,7 +106,7 @@ const updateForecast = async (req, res) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Помилка при оновленні прогнозу');
+            throw new Error(errorData.error || "Помилка при оновленні прогнозу");
         }
 
         const result = await response.json();
@@ -106,7 +148,7 @@ const deleteForecast = async (req, res) => {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Помилка при видаленні прогнозу');
+            throw new Error(errorData.error || "Помилка при видаленні прогнозу");
         }
 
         const result = await response.json();
@@ -127,26 +169,29 @@ const deleteForecast = async (req, res) => {
 };
 
 const searchByDay = async (req, res) => {
-    const { location_id, date } = req.query;
-    const locationId = parseInt(location_id);
+    const locationId = parseInt(req.query.location_id);
+    const date = req.query.date;
 
     try {
-        const response = await fetch(`http://localhost:3001/api/forecasts?locationId=${locationId}&date=${date}`, {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
+        const response = await fetch(
+            `http://localhost:3001/api/forecasts?locationId=${locationId}&date=${date}`,
+            {
+                method: "GET",
+                headers: {
+                    Accept: "application/json"
+                }
             }
-        });
+        );
 
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.error || `HTTP помилка! Статус: ${response.status}`);
         }
-        
+
         const data = await response.json();
 
         if (!data.location || !data.date || !data.forecast) {
-            throw new Error('Отримано неповні дані з API');
+            throw new Error("Отримано неповні дані з API");
         }
 
         renderForecastPage(res, data, date);
@@ -160,11 +205,20 @@ const searchByDay = async (req, res) => {
 };
 
 const getLocations = async (req, res) => {
+    try {
         const response = await fetch("http://localhost:3001/api/locations");
         const locations = await response.json();
         return locations;
+    } catch (error) {
+        console.error("Помилка при отриманні локацій:", error);
+        res.status(500).render("error", {
+            title: "Помилка",
+            message: "Помилка при отриманні прогнозу локацій"
+        });
+    }
 };
 
+// Рендер
 const renderForecastPage = (res, data, date) => {
     res.render("calendar/day", {
         title: "Прогноз погоди",
@@ -180,9 +234,10 @@ const renderForecastPage = (res, data, date) => {
 };
 
 module.exports = {
+    getPaginatedForecast,
     createForecast,
     deleteForecast,
     updateForecast,
     getLocations,
-    searchByDay,
+    searchByDay
 };

@@ -7,6 +7,8 @@
     <nav class="header__nav">
         <a href="/" class="nav__link">Головна</a></li>
         <a href="/calendar" class="nav__link">Календар</a>
+        <a href="/pagination?page=1&limit=3&locationId=1" class="nav__link">3 дні</a>
+        <a href="/pagination?page=1&limit=7&locationId=1" class="nav__link">7 днів</a>
         <% if (locals.user && locals.user.role === 'admin') { %>
             <a href="/admin" class="nav__link">Адмін панель</a>
         <% } %>
