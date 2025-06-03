@@ -32,11 +32,7 @@ const getPaginatedForecast = async (req, res) => {
             totalPages: result.totalPages,
             currentPage: result.currentPage,
             locationName: result.locationName,
-            date: new Date(result.date).toLocaleDateString('uk-UA', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            })
+            date: result.date
         });
     } catch (error) {
         console.error("Помилка при отриманні даних сторінки front:", error);
