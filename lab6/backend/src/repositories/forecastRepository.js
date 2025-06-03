@@ -1,10 +1,8 @@
 const Forecast = require('../models/Forecast');
 const Location = require('../models/Location');
 const DateModel = require('../models/Date');
-const { Op, Sequelize } = require('sequelize');
 
 const getLocations = async () => {
-    console.log("REPOOO");
     try {
         return await Location.findAll({ order: [['id', 'ASC']] });
     } catch (err) {
@@ -44,7 +42,15 @@ const getLocationById = async (t, id) => {
 };
 
 const getDateByDateString = async (t, dateStr) => {
+    if (!dateStr) {
+        console.error('getDateByDateString: dateStr is undefined or null');
+        return null;
+    }
+    
+    console.log('Шукаємо дату за рядком:', dateStr);
     const dateObj = await DateModel.findOne({ where: { date: dateStr } });
+    console.log('Результат пошуку дати:', dateObj);
+    
     return dateObj ? {
         id: dateObj.id,
         date: dateObj.date,

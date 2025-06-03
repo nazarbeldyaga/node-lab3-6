@@ -3,8 +3,8 @@ const router = express.Router();
 const dayController = require('../controllers/dayController');
 
 router.get('/', dayController.searchByDay);
-router.post('/forecast', dayController.createForecast);
-router.put('/forecast', dayController.updateForecast);
-router.delete('/forecast', dayController.deleteForecast);
+router.post('/', dayController.createForecast);
+router.put('/', dayController.updateForecast);
+router.delete('/', dayController.deleteForecast);
 
 module.exports = router;

@@ -1,49 +1,39 @@
 const dayService = require('../services/dayService');
 const forecastRepository = require('../repositories/forecastRepository');
 
-const createForecast = (req, res) => {
+const createForecast = async (req, res) => {
     const newForecast = req.body;
     
     try {
-        return dayService.createForecastTransaction(newForecast);
+        const result = await dayService.createForecastTransaction(newForecast);
+        res.status(201).json(result);
     } catch (error) {
         console.error('Помилка при додаванні погоди:', error);
-        res.status(500).render({ message: error.message || 'Не вдалося додати прогноз погоди' });
+        res.status(500).json({ error: error.message || 'Не вдалося додати прогноз погоди' });
     }
 };
 
-const updateForecast = (req, res) => {
+const updateForecast = async (req, res) => {
     try {
         const updates = req.body;
-
-        return dayService.updateAllForecastTransaction(updates);
+        const result = await dayService.updateAllForecastTransaction(updates);
+        res.status(200).json(result);
     } catch (error) {
         console.error('Помилка при оновленні погоди:', error);
-        res.status(500).json({ message: error.message || 'Не вдалося оновити прогноз погоди' });
+        res.status(500).json({ error: error.message || 'Не вдалося оновити прогноз погоди' });
     }
 };
 
-const deleteForecast = (req, res) => {
+const deleteForecast = async (req, res) => {
     const toDelete = req.body;
     try {
-        return dayService.deleteForecastTransaction(toDelete);
+        const result = await dayService.deleteForecastTransaction(toDelete);
+        res.status(200).json({ success: true, message: 'Прогноз успішно видалено' });
     } catch (error) {
-        console.error('Помилка при видалити погоди:', error);
-        res.status(500).json({ message: error.message || 'Не вдалося видалити прогноз погоди' });
+        console.error('Помилка при видаленні погоди:', error);
+        res.status(500).json({ error: error.message || 'Не вдалося видалити прогноз погоди' });
     }
 };
-
-// const searchByDay = (req, res) => {
-//     const date =  req.body.date;
-//     const locationId = parseInt(req.body.location_id);
-//
-//     try {
-//         return dayService.getForecastByDateAndLocation(locationId, date);
-//     } catch (error) {
-//         console.error('Помилка при отриманні прогнозу:', error);
-//         res.status(500).json({ message: 'Помилка при отриманні прогнозу погоди' });
-//     }
-// };
 
 const searchByDay = async (req, res) => {
     try {
@@ -53,29 +43,61 @@ const searchByDay = async (req, res) => {
             return res.status(400).json({ error: 'Необхідно вказати locationId та date' });
         }
 
-        const db = req.app.get('db');
+        // Використовуємо транзакцію з бази даних
+        const db = require('../config/database');
         
-        // Спочатку отримуємо об'єкт дати за рядком дати
-        const dateObj = await forecastRepository.getDateByDateString(db, date);
+        // Використовуємо транзакцію для всіх операцій
+        const result = await db.tx(async t => {
+            // Отримуємо інформацію про локацію
+            const location = await forecastRepository.getLocationById(t, parseInt(locationId));
+            if (!location) {
+                return { error: 'Локацію не знайдено' };
+            }
+            
+            // Спочатку отримуємо об'єкт дати за рядком дати
+            const dateObj = await forecastRepository.getDateByDateString(t, date);
+            if (!dateObj) {
+                return { error: 'Дату не знайдено' };
+            }
+            
+            // Тепер отримуємо прогнози за locationId та dateId
+            const forecasts = await forecastRepository.getForecastsByLocationAndDate(t, parseInt(locationId), dateObj.id);
+            
+            // Отримуємо дані для наступного дня
+            const nextDate = new Date(date);
+            nextDate.setDate(nextDate.getDate() + 1);
+            const nextDateStr = nextDate.toISOString().split('T')[0];
+            const nextDateData = await forecastRepository.getDateByDateString(t, nextDateStr);
+            
+            // Отримуємо дані для попереднього дня
+            const prevDate = new Date(date);
+            prevDate.setDate(prevDate.getDate() - 1);
+            const prevDateStr = prevDate.toISOString().split('T')[0];
+            const prevDateData = await forecastRepository.getDateByDateString(t, prevDateStr);
+            
+            return {
+                location,
+                date: dateObj,
+                forecast: forecasts,
+                nextDateData,
+                prevDateData
+            };
+        });
         
-        if (!dateObj) {
-            return res.status(404).json({ error: 'Дату не знайдено' });
+        if (result.error) {
+            return res.status(404).json({ error: result.error });
         }
         
-        // Тепер отримуємо прогнози за locationId та dateId
-        const forecasts = await forecastRepository.getForecastsByLocationAndDate(db, parseInt(locationId), dateObj.id);
-
-        res.status(200).json(forecasts);
+        res.status(200).json(result);
     } catch (error) {
         console.error('Помилка при отриманні прогнозів:', error);
-        res.status(500).json({ error: 'Внутрішня помилка сервера' });
+        res.status(500).json({ error: error.message || 'Внутрішня помилка сервера' });
     }
 };
 
 const getLocations = async (req, res) => {
     try {
-        const db = req.app.get('db');
-        const locations = await forecastRepository.getLocations(db);
+        const locations = await forecastRepository.getLocations();
         res.status(200).json(locations);
     } catch (error) {
         console.error('Error fetching locations:', error);
@@ -90,9 +112,7 @@ const getLocationById = async (req, res) => {
         if (isNaN(locationId)) {
             return res.status(400).json({ error: 'Некоректний ID локації' });
         }
-
-        const db = req.app.get('db');
-        const location = await forecastRepository.getLocationById(db, locationId);
+        const location = await forecastRepository.getLocationById(locationId);
 
         if (!location) {
             return res.status(404).json({ error: 'Локацію не знайдено' });
